@@ -22,7 +22,7 @@
     const {PORT} = process.env || 3000
 
     app.get("/", (request, response) => {
-        response.send("Hi, I got the request")
+        response.status(200)
     })
 
     app.listen(PORT, () => {
