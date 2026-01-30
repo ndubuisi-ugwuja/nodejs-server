@@ -9,5 +9,6 @@
 
 ```package.json
     "start": "node ./src/index.mjs",
-    "start:dev": "nodemon ./src/index.mjs"
+    "start:dev": "nodemon ./src/index.mjs",
+    "format": "prettier --write ."
 ```
