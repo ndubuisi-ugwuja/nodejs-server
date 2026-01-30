@@ -1,32 +1,32 @@
 {
-  "name": "nodejs-server",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./src/index.mjs",
-    "start:dev": "nodemon ./src/index.mjs" 
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "bcrypt": "^6.0.0",
-    "connect-mongo": "^6.0.0",
-    "cookie-parser": "^1.4.7",
-    "express": "^5.2.1",
-    "express-session": "^1.19.0",
-    "express-validator": "^7.3.1",
-    "mongoose": "^9.1.5",
-    "passport": "^0.7.0",
-    "passport-google-oauth20": "^2.0.0",
-    "passport-local": "^1.0.0"
-  },
-  "devDependencies": {
-    "jest": "^30.2.0",
-    "nodemon": "^3.1.11",
-    "prettier": "^3.8.1"
-  },
-  "type": "module"
+    "name": "nodejs-server",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node ./src/index.mjs",
+        "start:dev": "nodemon ./src/index.mjs"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "dependencies": {
+        "bcrypt": "^6.0.0",
+        "connect-mongo": "^6.0.0",
+        "cookie-parser": "^1.4.7",
+        "express": "^5.2.1",
+        "express-session": "^1.19.0",
+        "express-validator": "^7.3.1",
+        "mongoose": "^9.1.5",
+        "passport": "^0.7.0",
+        "passport-google-oauth20": "^2.0.0",
+        "passport-local": "^1.0.0"
+    },
+    "devDependencies": {
+        "jest": "^30.2.0",
+        "nodemon": "^3.1.11",
+        "prettier": "^3.8.1"
+    },
+    "type": "module"
 }
