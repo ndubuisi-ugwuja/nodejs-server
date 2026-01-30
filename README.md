@@ -7,7 +7,7 @@
 - add essential dev dependencies: npm i -D nodemon jest prettier
 - configure dev tools: 
 ```package.json
-    "start": "node ./src/index.js",
-    "start:dev": "nodemon ./src/index.js" 
+    "start": "node ./src/index.mjs",
+    "start:dev": "nodemon ./src/index.mjs" 
 ```
     
