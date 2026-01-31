@@ -16,8 +16,16 @@ app.get("/api/users", (request, response) => {
 })
 
 app.get("/api/users/:id", (request, response) => {
-    console.log(request.params)
-    response.sendStatus(200)
+    const parsedId = parseInt(request.params.id)
+    console.log(parsedId)
+    
+    if(isNaN(parsedId)) return response.status(400).send({msg: "Id is not a number"})
+
+    const findUser = mockUsers.find((user) => user.id === parsedId)
+
+    if (!findUser) return response.status(404).send({msg: "User not found"})
+
+    return response.status(200).send(findUser)
 })
 
 app.listen(PORT, () => {
