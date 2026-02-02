@@ -22,7 +22,7 @@
     const {PORT} = process.env || 3000
 
     app.get("/", (request, response) => {
-        response.status(200).send({msg: "This is the root url"})
+        response.status(200).send({msg: "Root url"})
     })
 
     app.listen(PORT, () => {
