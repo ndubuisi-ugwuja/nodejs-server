@@ -28,6 +28,9 @@ app.get("/api/users/:id", (request, response) => {
     return response.status(200).send(findUser)
 })
 
+// Route params
+app.get("/")
+
 app.listen(PORT, () => {
     console.log(`Running on port ${PORT}`)
 })
