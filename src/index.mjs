@@ -29,7 +29,7 @@ app.get("/api/users/:id", (request, response) => {
 })
 
 // Route params
-app.get("/")
+app.get("/api/")
 
 app.listen(PORT, () => {
     console.log(`Running on port ${PORT}`)
