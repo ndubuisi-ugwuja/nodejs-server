@@ -1,20 +1,26 @@
-import express from "express";
+import express, { request, response } from "express";
 import 'dotenv/config'
 
 const app = express()
 
 const {PORT} = process.env || 3000
 
-const mockUsers = [{id: 1, name: "Ndubuisi"}, {id: 2, name: "Jiovta"}, {id: 1, name: "Ugwuja"},]
+const mockUsers = [{id: 1, name: "Ndubuisi"}, {id: 2, name: "Jiovta"}, {id: 3, name: "Ugwuja"},]
 
 app.get("/", (request, response) => {
-    response.status(201).send({msg: "Got it"})
+    response.status(201).send({msg: "This is the root directory"})
 })
 
 app.get("/api/users", (request, response) => {
-    response.status(201).send(mockUsers)
+    console.log(request.query)
+    const {query: {filter, value}} = request
+
+    if(!filter && !value) return response.status(201).send(mockUsers)
+
+    if(filter && value) return response.send()
 })
 
+// Route parameter
 app.get("/api/users/:id", (request, response) => {
     const parsedId = parseInt(request.params.id)
     console.log(parsedId)
@@ -27,9 +33,6 @@ app.get("/api/users/:id", (request, response) => {
 
     return response.status(200).send(findUser)
 })
-
-// Route params
-app.get("/api/users")
 
 app.listen(PORT, () => {
     console.log(`Running on port ${PORT}`)
