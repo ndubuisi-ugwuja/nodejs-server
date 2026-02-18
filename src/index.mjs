@@ -8,16 +8,22 @@ const {PORT} = process.env || 3000
 const mockUsers = [{id: 1, name: "Ndubuisi"}, {id: 2, name: "Jiovta"}, {id: 3, name: "Ugwuja"},]
 
 app.get("/", (request, response) => {
-    response.status(201).send({msg: "This is the root directory"})
+    response.status(200).send({msg: "This is the root directory"})
 })
 
+// Query parameters
 app.get("/api/users", (request, response) => {
     console.log(request.query)
     const {query: {filter, value}} = request
 
-    if(!filter && !value) return response.status(201).send(mockUsers)
+    if(filter && value) return response.send(
+        mockUsers.filter((user) => user[filter].includes(value))
+    )
 
-    if(filter && value) return response.send()
+    return response.status(201).send(mockUsers)
+
+    // Here when we visit the end point http://localhost:3000/api/users?filter=name&value=Nd, 
+    // it filters by name and returns names that includes Nd
 })
 
 // Route parameter
@@ -33,6 +39,9 @@ app.get("/api/users/:id", (request, response) => {
 
     return response.status(200).send(findUser)
 })
+
+// Post request
+app.post("/api/")
 
 app.listen(PORT, () => {
     console.log(`Running on port ${PORT}`)
