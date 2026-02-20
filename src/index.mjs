@@ -41,7 +41,7 @@ app.get("/api/users/:id", (request, response) => {
 })
 
 // Post request
-app.post("/api/")
+app.post("/api/users")
 
 app.listen(PORT, () => {
     console.log(`Running on port ${PORT}`)
