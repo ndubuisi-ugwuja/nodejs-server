@@ -41,7 +41,9 @@ app.get("/api/users/:id", (request, response) => {
 })
 
 // Post request
-app.post("/api/users")
+app.post("/api/users", (request, response) => {
+    const {body: {}} = request
+})                       
 
 app.listen(PORT, () => {
     console.log(`Running on port ${PORT}`)
