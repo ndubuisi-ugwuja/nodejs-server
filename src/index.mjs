@@ -22,7 +22,7 @@ app.get("/api/users", (request, response) => {
         mockUsers.filter((user) => user[filter].includes(value))
     )
 
-    return response.status(201).send(mockUsers)
+    return response.status(200).send(mockUsers)
 
     // Here when we visit the end point http://localhost:3000/api/users?filter=name&value=Nd, 
     // it filters by name and returns names that includes Nd
@@ -45,6 +45,8 @@ app.get("/api/users/:id", (request, response) => {
 // Post request
 app.post("/api/users", (request, response) => {
     console.log(request.body)
+    const { body } = request
+    const newUser = {id: [mockUsers.length]}
     return response.status(201).send({msg: "User created successfully"})
 })                       
 
