@@ -3,6 +3,8 @@ import 'dotenv/config'
 
 const app = express()
 
+app.use(express.json())
+
 const {PORT} = process.env || 3000
 
 const mockUsers = [{id: 1, name: "Ndubuisi"}, {id: 2, name: "Jiovta"}, {id: 3, name: "Ugwuja"},]
