@@ -43,7 +43,7 @@ app.get("/api/users/:id", (request, response) => {
 // Post request
 app.post("/api/users", (request, response) => {
     console.log(request.body)
-    return response.status(201)
+    return response.status(201).send({msg: "User created successfully"})
 })                       
 
 app.listen(PORT, () => {
