@@ -46,7 +46,9 @@ app.get("/api/users/:id", (request, response) => {
 app.post("/api/users", (request, response) => {
     console.log(request.body)
     const { body } = request
-    const newUser = {id: [mockUsers.length]}
+    const newUser = {id: mockUsers.length + 1, ...body}
+    mockUsers.push(newUser)
+    console.log(mockUsers)    
     return response.status(201).send({msg: "User created successfully"})
 })                       
 
