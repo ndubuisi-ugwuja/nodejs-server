@@ -42,7 +42,8 @@ app.get("/api/users/:id", (request, response) => {
 
 // Post request
 app.post("/api/users", (request, response) => {
-    const {body: {}} = request
+    console.log(request.body)
+    return response.status(201)
 })                       
 
 app.listen(PORT, () => {
