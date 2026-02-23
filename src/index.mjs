@@ -42,7 +42,7 @@ app.get("/api/users/:id", (request, response) => {
     return response.status(200).send(findUser)
 })
 
-// Post request
+// Post Request
 app.post("/api/users", (request, response) => {
     console.log(request.body)
     const { body } = request
@@ -52,7 +52,7 @@ app.post("/api/users", (request, response) => {
     return response.status(201).send(newUser)
 })                       
 
-// Put request
+// Put Request
 app.put("/api/users/:id", (request, response) => {
     console.log(request.body)
     const { body, params: {id} } = request
@@ -67,6 +67,25 @@ app.put("/api/users/:id", (request, response) => {
     
     mockUsers[findUserIndex] = {id: parsedId, ...body}
 
+    console.log(mockUsers)
+
+    return response.status(201).send(mockUsers)
+})
+
+// Patch Request
+app.patch("/api/users/:id", (request, response) => {
+    console.log(request.body)
+    const {body, params: {id}} = request
+
+    const parsedId = parseInt(id)
+
+    if(isNaN(parsedId)) return response.status(400).send({msg: "Id is not a number"})
+
+    const findUserIndex = mockUsers.findIndex((user) => user.id === parsedId)
+
+    if(findUserIndex === -1) return response.status(404).send({msg: "User not found"})
+
+    mockUsers[findUserIndex] = {id: parsedId, ...body}
     console.log(mockUsers)
 
     return response.status(201).send(mockUsers)
