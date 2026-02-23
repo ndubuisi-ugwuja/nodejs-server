@@ -49,8 +49,18 @@ app.post("/api/users", (request, response) => {
     const newUser = {id: mockUsers.length + 1, ...body}
     mockUsers.push(newUser)
     console.log(mockUsers)    
-    return response.status(201).send({msg: "User created successfully"})
+    return response.status(201).send(newUser)
 })                       
+
+// Put request
+app.put("/api/users", (request, response) => {
+    console.log(request.body)
+    const { body } = request
+    const newUser = {id: mockUsers.length + 1, ...body}
+    mockUsers.push(newUser)
+    console.log(mockUsers)
+    return response.status(201)
+})
 
 app.listen(PORT, () => {
     console.log(`Running on port ${PORT}`)
