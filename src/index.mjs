@@ -7,7 +7,7 @@ app.use(express.json())
 
 const {PORT} = process.env || 3000
 
-const mockUsers = [{id: 1, name: "Ndubuisi"}, {id: 2, name: "Jiovta"}, {id: 3, name: "Ugwuja"},]
+const mockUsers = [{id: 1, name: "Ndubuisi", username: "Ndu123"}, {id: 2, name: "Jiovta", username: "Jio123"}, {id: 3, name: "Ugwuja", username: "Ugw123"},]
 
 app.get("/", (request, response) => {
     response.status(200).send({msg: "This is the root directory"})
@@ -66,6 +66,8 @@ app.put("/api/users/:id", (request, response) => {
     if (findUserIndex === -1) return response.status(404).send({msg: "User not found"})
     
     mockUsers[findUserIndex] = {id: parsedId, ...body}
+
+    console.log(mockUsers)
 
     return response.status(201).send(mockUsers)
 })
