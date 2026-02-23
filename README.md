@@ -30,3 +30,7 @@
     })
 ```
 
+- Get request fetches data from our backend database
+- Post request adds data to our database
+- Put request updates the entire data field in our database
+- Patch request updates part of our entire data field in our database
