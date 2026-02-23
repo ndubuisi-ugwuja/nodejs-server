@@ -85,7 +85,7 @@ app.patch("/api/users/:id", (request, response) => {
 
     if(findUserIndex === -1) return response.status(404).send({msg: "User not found"})
 
-    mockUsers[findUserIndex] = {id: parsedId, ...body}
+    mockUsers[findUserIndex] = {...mockUsers[findUserIndex], ...body}
     console.log(mockUsers)
 
     return response.status(201).send(mockUsers)
