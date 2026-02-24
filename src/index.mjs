@@ -11,6 +11,8 @@ const loggingMiddleware = (request, response, next) => {
     next()
 }
 
+app.use(loggingMiddleware())
+
 const {PORT} = process.env || 3000
 
 const mockUsers = [{id: 1, name: "Ndubuisi", username: "Ndu123"}, {id: 2, name: "Jiovta", username: "Jio123"}, {id: 3, name: "Ugwuja", username: "Ugw123"},]
