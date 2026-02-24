@@ -6,7 +6,10 @@ const app = express()
 // Middleware
 app.use(express.json())
 
-const loggingMiddleware = (request, response, next) => {}
+const loggingMiddleware = (request, response, next) => {
+    console.log(`${request.method}, ${request.url}`)
+    next()
+}
 
 const {PORT} = process.env || 3000
 
