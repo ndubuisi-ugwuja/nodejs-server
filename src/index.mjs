@@ -3,7 +3,10 @@ import 'dotenv/config'
 
 const app = express()
 
+// Middleware
 app.use(express.json())
+
+const loggingMiddleware = (request, response, next) => {}
 
 const {PORT} = process.env || 3000
 
@@ -69,7 +72,7 @@ app.put("/api/users/:id", (request, response) => {
 
     console.log(mockUsers)
 
-    return response.status(201).send(mockUsers)
+    return response.status(200).send(mockUsers)
 })
 
 // Patch Request
@@ -88,7 +91,24 @@ app.patch("/api/users/:id", (request, response) => {
     mockUsers[findUserIndex] = {...mockUsers[findUserIndex], ...body}
     console.log(mockUsers)
 
-    return response.status(201).send(mockUsers)
+    return response.status(200).send(mockUsers)
+})
+
+// Delete Request
+app.delete("/api/users/:id", (request, response) => {
+    const parsedId = parseInt(request.params.id)
+    console.log(parsedId)
+
+    if(isNaN(parsedId)) return response.status(400).send({msg: "Id is not a number"})
+
+    const findUserIndex = mockUsers.findIndex((user) => user.id === parsedId)
+
+    if(findUserIndex === -1) return response.status(404)
+
+    mockUsers.splice(findUserIndex, 1)
+    console.log(mockUsers)
+
+    return response.status(200).send(mockUsers)   
 })
 
 app.listen(PORT, () => {
