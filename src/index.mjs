@@ -4,14 +4,12 @@ import 'dotenv/config'
 const app = express()
 
 // Middleware
-app.use(express.json())
-
 const loggingMiddleware = (request, response, next) => {
-    console.log(`${request.method}, ${request.url}`)
+    console.log(`${request.method} - ${request.url}`)
     next()
 }
 
-app.use(loggingMiddleware)
+app.use(express.json(), loggingMiddleware)
 
 const {PORT} = process.env || 3000
 
