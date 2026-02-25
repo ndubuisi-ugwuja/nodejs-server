@@ -11,7 +11,7 @@ const loggingMiddleware = (request, response, next) => {
     next()
 }
 
-app.use(loggingMiddleware())
+app.use(loggingMiddleware)
 
 const {PORT} = process.env || 3000
 
