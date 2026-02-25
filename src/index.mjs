@@ -3,13 +3,23 @@ import 'dotenv/config'
 
 const app = express()
 
-// Middleware
-const loggingMiddleware = (request, response, next) => {
-    console.log(`${request.method} - ${request.url}`)
+// Middlewares
+const resolveIndexByUserId = (request, response, next) => {
+    const {params: {id}} = request
+
+    const parsedId = parseInt(id)
+
+    if(isNaN(parsedId)) return response.status(400).send({msg: "Id is not a number"})
+
+    const findUserIndex = mockUsers.findIndex((user) => user.id === parsedId)
+
+    if(findUserIndex === -1) return response.status(404).send({msg: "User not found"})
+    request.findUserIndex = findUserIndex
+    request.parsedId = parsedId
     next()
 }
 
-app.use(express.json(), loggingMiddleware)
+app.use(express.json())
 
 const {PORT} = process.env || 3000
 
@@ -35,15 +45,11 @@ app.get("/api/users", (request, response) => {
 })
 
 // Route parameter
-app.get("/api/users/:id", (request, response) => {
-    const parsedId = parseInt(request.params.id)
-    console.log(parsedId)
-    
-    if(isNaN(parsedId)) return response.status(400).send({msg: "Id is not a number"})
+app.get("/api/users/:id", resolveIndexByUserId, (request, response) => {
+    const {findUserIndex} = request
+    const findUser = mockUsers[findUserIndex]
 
-    const findUser = mockUsers.find((user) => user.id === parsedId)
-
-    if (!findUser) return response.status(404).send({msg: "User not found"})
+    console.log(findUser)
 
     return response.status(200).send(findUser)
 })
@@ -59,18 +65,8 @@ app.post("/api/users", (request, response) => {
 })                       
 
 // Put Request
-app.put("/api/users/:id", (request, response) => {
-    console.log(request.body)
-    const { body, params: {id} } = request
-    const parsedId = parseInt(id)
-    console.log(parsedId)
-    
-    if(isNaN(parsedId)) return response.status(400).send({msg: "Id is not a number"})
-
-    const findUserIndex = mockUsers.findIndex((user) => user.id === parsedId)
-
-    if (findUserIndex === -1) return response.status(404).send({msg: "User not found"})
-    
+app.put("/api/users/:id", resolveIndexByUserId, (request, response) => {
+    const {body, findUserIndex, parsedId} = request
     mockUsers[findUserIndex] = {id: parsedId, ...body}
 
     console.log(mockUsers)
@@ -79,18 +75,8 @@ app.put("/api/users/:id", (request, response) => {
 })
 
 // Patch Request
-app.patch("/api/users/:id", (request, response) => {
-    console.log(request.body)
-    const {body, params: {id}} = request
-
-    const parsedId = parseInt(id)
-
-    if(isNaN(parsedId)) return response.status(400).send({msg: "Id is not a number"})
-
-    const findUserIndex = mockUsers.findIndex((user) => user.id === parsedId)
-
-    if(findUserIndex === -1) return response.status(404).send({msg: "User not found"})
-
+app.patch("/api/users/:id", resolveIndexByUserId, (request, response) => {
+    const {body, findUserIndex} = request
     mockUsers[findUserIndex] = {...mockUsers[findUserIndex], ...body}
     console.log(mockUsers)
 
@@ -98,16 +84,8 @@ app.patch("/api/users/:id", (request, response) => {
 })
 
 // Delete Request
-app.delete("/api/users/:id", (request, response) => {
-    const parsedId = parseInt(request.params.id)
-    console.log(parsedId)
-
-    if(isNaN(parsedId)) return response.status(400).send({msg: "Id is not a number"})
-
-    const findUserIndex = mockUsers.findIndex((user) => user.id === parsedId)
-
-    if(findUserIndex === -1) return response.status(404)
-
+app.delete("/api/users/:id", resolveIndexByUserId, (request, response) => {
+    const {findUserIndex} = request
     mockUsers.splice(findUserIndex, 1)
     console.log(mockUsers)
 
