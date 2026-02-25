@@ -7,7 +7,7 @@ const app = express()
 app.use(express.json())
 
 const loggingMiddleware = (request, response, next) => {
-    console.log(request.method)
+    console.log(`${request.method}, ${request.url}`)
     next()
 }
 
