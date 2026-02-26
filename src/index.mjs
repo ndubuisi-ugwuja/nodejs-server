@@ -31,7 +31,7 @@ app.get("/", (request, response) => {
 })
 
 // Query parameters
-app.get("/api/users", (request, response) => {
+app.get("/api/users", query("filter").isString().notEmpty(), (request, response) => {
     console.log(request.query)
     const {query: {filter, value}} = request
 
