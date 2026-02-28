@@ -1,5 +1,5 @@
 import express, { request, response } from "express";
-import { query } from "express-validator"
+import { query, validationResult, body } from "express-validator"
 import 'dotenv/config'
 
 const app = express()
@@ -31,8 +31,10 @@ app.get("/", (request, response) => {
 })
 
 // Query parameters
-app.get("/api/users", query("filter").isString().notEmpty(), (request, response) => {
-    console.log(request.query)
+app.get("/api/users", query("filter").isString().withMessage("Must be a string").notEmpty().withMessage("Must not be empty").isLength({min: 3, max:10}).withMessage("Must be 3 - 10 chars"), (request, response) => {
+    const result = validationResult(request)
+    console.log(result)
+
     const {query: {filter, value}} = request
 
     if(filter && value) return response.send(
@@ -56,7 +58,25 @@ app.get("/api/users/:id", resolveIndexByUserId, (request, response) => {
 })
 
 // Post Request
-app.post("/api/users", (request, response) => {
+app.post("/api/users", [
+    body("name")
+    .notEmpty()
+    .withMessage("name cannot be empty")
+    .isString()
+    .withMessage("Must be a string"),
+    body("username")
+    .notEmpty()
+    .withMessage("username cannot be empty")
+    .isString()
+    .withMessage("Must be a string")
+]
+    , (request, response) => {
+    const result = validationResult(request)
+    console.log(result)
+    
+    if(!result.isEmpty())
+        return response.status(400).send({error: result.array()})
+
     console.log(request.body)
     const { body } = request
     const newUser = {id: mockUsers.length + 1, ...body}
@@ -66,7 +86,22 @@ app.post("/api/users", (request, response) => {
 })                       
 
 // Put Request
-app.put("/api/users/:id", resolveIndexByUserId, (request, response) => {
+app.put("/api/users/:id", [
+    body("name")
+    .notEmpty()
+    .withMessage("name cannot be empty")
+    .isString()
+    .withMessage("Must be a string"),
+    body("username")
+    .notEmpty()
+    .withMessage("username cannot be empty")
+    .isString()
+    .withMessage("Must be a string")
+], resolveIndexByUserId, (request, response) => {
+    const result = validationResult(request)
+    if(!result.isEmpty())
+        return response.status(400),send({error: result.array()})
+
     const {body, findUserIndex, parsedId} = request
     mockUsers[findUserIndex] = {id: parsedId, ...body}
 
