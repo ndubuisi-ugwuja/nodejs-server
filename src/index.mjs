@@ -117,7 +117,10 @@ app.patch("/api/users/:id",
     .withMessage("name cannot be empty")
     .isString()
     .withMessage("Must be a string"),resolveIndexByUserId, (request, response) => {
-    const 
+    const result = validationResult(request)
+
+    if(!result.isEmpty())
+        return response.status(400).send({error: result.array()})
 
     const {body, findUserIndex} = request
     mockUsers[findUserIndex] = {...mockUsers[findUserIndex], ...body}
