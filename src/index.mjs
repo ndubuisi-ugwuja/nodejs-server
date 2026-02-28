@@ -111,7 +111,14 @@ app.put("/api/users/:id", [
 })
 
 // Patch Request
-app.patch("/api/users/:id", resolveIndexByUserId, (request, response) => {
+app.patch("/api/users/:id", 
+    body()
+    .notEmpty()
+    .withMessage("name cannot be empty")
+    .isString()
+    .withMessage("Must be a string"),resolveIndexByUserId, (request, response) => {
+    const 
+
     const {body, findUserIndex} = request
     mockUsers[findUserIndex] = {...mockUsers[findUserIndex], ...body}
     console.log(mockUsers)
