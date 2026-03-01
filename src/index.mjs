@@ -1,5 +1,5 @@
 import express, { request, response } from "express";
-import { query, validationResult, body } from "express-validator"
+import { query, validationResult, body, matchedData } from "express-validator"
 import 'dotenv/config'
 
 const app = express()
