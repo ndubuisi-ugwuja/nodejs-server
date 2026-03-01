@@ -77,6 +77,7 @@ app.post("/api/users", [
     if(!result.isEmpty())
         return response.status(400).send({error: result.array()})
 
+    const data = matchedData(request)
     console.log(request.body)
     const { body } = request
     const newUser = {id: mockUsers.length + 1, ...body}
