@@ -103,8 +103,11 @@ app.put("/api/users/:id", [
     if(!result.isEmpty())
         return response.status(400).send({error: result.array()})
 
-    const {body, findUserIndex, parsedId} = request
-    mockUsers[findUserIndex] = {id: parsedId, ...body}
+    const data = matchedData()
+    console.log(data)
+    
+    const {findUserIndex, parsedId} = request
+    mockUsers[findUserIndex] = {id: parsedId, ...data}
 
     console.log(mockUsers)
 
