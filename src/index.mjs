@@ -78,9 +78,9 @@ app.post("/api/users", [
         return response.status(400).send({error: result.array()})
 
     const data = matchedData(request)
-    console.log(request.body)
-    const { body } = request
-    const newUser = {id: mockUsers.length + 1, ...body}
+    console.log(data)
+    
+    const newUser = {id: mockUsers.length + 1, ...data}
     mockUsers.push(newUser)
     console.log(mockUsers)    
     return response.status(201).send(newUser)
