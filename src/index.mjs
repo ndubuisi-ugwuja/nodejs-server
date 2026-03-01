@@ -103,7 +103,7 @@ app.put("/api/users/:id", [
     if(!result.isEmpty())
         return response.status(400).send({error: result.array()})
 
-    const data = matchedData()
+    const data = matchedData(request)
     console.log(data)
     
     const {findUserIndex, parsedId} = request
