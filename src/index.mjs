@@ -100,7 +100,7 @@ app.put("/api/users/:id", [
 ], resolveIndexByUserId, (request, response) => {
     const result = validationResult(request)
     if(!result.isEmpty())
-        return response.status(400),send({error: result.array()})
+        return response.status(400).send({error: result.array()})
 
     const {body, findUserIndex, parsedId} = request
     mockUsers[findUserIndex] = {id: parsedId, ...body}
