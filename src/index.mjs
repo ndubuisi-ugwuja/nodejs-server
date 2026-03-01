@@ -86,7 +86,7 @@ app.post("/api/users", [
 })                       
 
 // Put Request
-app.put("/api/users/:id", resolveIndexByUserId, [
+app.put("/api/users/:id", [
     body("name")
     .notEmpty()
     .withMessage("name cannot be empty")
@@ -97,7 +97,7 @@ app.put("/api/users/:id", resolveIndexByUserId, [
     .withMessage("username cannot be empty")
     .isString()
     .withMessage("Must be a string")
-], (request, response) => {
+], resolveIndexByUserId, (request, response) => {
     const result = validationResult(request)
     if(!result.isEmpty())
         return response.status(400).send({error: result.array()})
