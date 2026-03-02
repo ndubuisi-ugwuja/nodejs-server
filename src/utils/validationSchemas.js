@@ -1,1 +1,5 @@
-export const createUserValidationSchema = {}
+export const createUserValidationSchema = {
+    username: {
+        
+    }
+}
