@@ -76,18 +76,7 @@ app.post("/api/users", checkSchema(createUserValidationSchema), (request, respon
 })                       
 
 // Put Request
-app.put("/api/users/:id", [
-    body("name")
-    .notEmpty()
-    .withMessage("name cannot be empty")
-    .isString()
-    .withMessage("Must be a string"),
-    body("username")
-    .notEmpty()
-    .withMessage("username cannot be empty")
-    .isString()
-    .withMessage("Must be a string")
-], resolveIndexByUserId, (request, response) => {
+app.put("/api/users/:id", checkSchema(createUserValidationSchema), resolveIndexByUserId, (request, response) => {
     const result = validationResult(request)
     if(!result.isEmpty())
         return response.status(400).send({error: result.array()})
@@ -104,12 +93,7 @@ app.put("/api/users/:id", [
 })
 
 // Patch Request
-app.patch("/api/users/:id", 
-    body()
-    .notEmpty()
-    .withMessage("name cannot be empty")
-    .isString()
-    .withMessage("Must be a string"),resolveIndexByUserId, (request, response) => {
+app.patch("/api/users/:id", resolveIndexByUserId, (request, response) => {
     const result = validationResult(request)
 
     if(!result.isEmpty())
