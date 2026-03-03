@@ -7,8 +7,10 @@ export const createUserValidationSchema = {
             msg: "Username must be a string"
         },
         isLength: {
-            max: 10,
-            min: 3
+            options: {
+                min: 3,
+                max: 32
+            }
         }
     }
 }
