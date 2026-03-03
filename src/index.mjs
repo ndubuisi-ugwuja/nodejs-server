@@ -1,5 +1,6 @@
 import express, { request, response } from "express";
 import { query, validationResult, body, matchedData } from "express-validator"
+import { createUserValidationSchema } from "./utils/validationSchemas";
 import 'dotenv/config'
 
 const app = express()
