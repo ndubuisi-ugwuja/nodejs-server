@@ -1,5 +1,5 @@
 import express, { request, response } from "express";
-import { query, validationResult, body, matchedData } from "express-validator"
+import { query, validationResult, body, matchedData, checkSchema } from "express-validator"
 import { createUserValidationSchema } from "./utils/validationSchemas";
 import 'dotenv/config'
 
@@ -59,19 +59,7 @@ app.get("/api/users/:id", resolveIndexByUserId, (request, response) => {
 })
 
 // Post Request
-app.post("/api/users", [
-    body("name")
-    .notEmpty()
-    .withMessage("name cannot be empty")
-    .isString()
-    .withMessage("Must be a string"),
-    body("username")
-    .notEmpty()
-    .withMessage("username cannot be empty")
-    .isString()
-    .withMessage("Must be a string")
-]
-    , (request, response) => {
+app.post("/api/users", checkSchema(createUserValidationSchema), (request, response) => {
     const result = validationResult(request)
     console.log(result)
     
