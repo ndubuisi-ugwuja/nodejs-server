@@ -82,6 +82,7 @@ app.post("/api/users", checkSchema(createUserValidationSchema), async (request, 
         return response.status(201).send(savedUser)
     } catch(err) {
         console.error("Error:", err)
+        return response.sendStatus(400)
     }
 })                       
 
