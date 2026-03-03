@@ -1,9 +1,12 @@
 import express, { request, response } from "express";
 import { query, validationResult, body, matchedData, checkSchema } from "express-validator"
 import { createUserValidationSchema } from "./utils/validationSchemas.mjs";
+import mongoose from "mongoose"
 import 'dotenv/config'
 
 const app = express()
+
+mongoose.connect("mongodb://localhost/27017")
 
 // Middlewares
 const resolveIndexByUserId = (request, response, next) => {
