@@ -2,6 +2,7 @@ import express, { request, response } from "express";
 import { query, validationResult, body, matchedData, checkSchema } from "express-validator"
 import { createUserValidationSchema } from "./utils/validationSchemas.mjs";
 import mongoose from "mongoose"
+import { User } from "./mongoose/schema/user.mjs";
 import 'dotenv/config'
 
 const app = express()
@@ -65,7 +66,7 @@ app.get("/api/users/:id", resolveIndexByUserId, (request, response) => {
 })
 
 // Post Request
-app.post("/api/users", checkSchema(createUserValidationSchema), (request, response) => {
+app.post("/api/users", checkSchema(createUserValidationSchema), async (request, response) => {
     const result = validationResult(request)
     console.log(result)
     
@@ -75,10 +76,10 @@ app.post("/api/users", checkSchema(createUserValidationSchema), (request, respon
     const data = matchedData(request)
     console.log(data)
     
-    const newUser = {id: mockUsers.length + 1, ...data}
-    mockUsers.push(newUser)
-    console.log(mockUsers)    
-    return response.status(201).send(newUser)
+    const newUser = new User(data)
+    const savedUser = await newUser.save()
+    
+    return response.status(201).send(savedUser)
 })                       
 
 // Put Request
