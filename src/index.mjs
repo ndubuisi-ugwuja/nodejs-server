@@ -77,9 +77,12 @@ app.post("/api/users", checkSchema(createUserValidationSchema), async (request, 
     console.log(data)
     
     const newUser = new User(data)
-    const savedUser = await newUser.save()
-    
-    return response.status(201).send(savedUser)
+    try {
+        const savedUser = await newUser.save()
+        return response.status(201).send(savedUser)
+    } catch(err) {
+        console.error("Error:", err)
+    }
 })                       
 
 // Put Request
