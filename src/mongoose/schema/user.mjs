@@ -11,3 +11,5 @@ const userSchema = new Schema({
         unique: true
     }
 })
+
+const User = mongoose.model("User", userSchema)
