@@ -6,7 +6,10 @@ import 'dotenv/config'
 
 const app = express()
 
-mongoose.connect("mongodb://localhost/27017")
+mongoose.connect("mongodb://localhost/express-backend")
+    .then(() => console.log("Connected to Database"))
+    .catch((err) => console.log(`Error: ${err}`))
+
 
 // Middlewares
 const resolveIndexByUserId = (request, response, next) => {
