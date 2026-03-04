@@ -10,7 +10,7 @@ const app = express()
 
 mongoose.connect("mongodb://localhost/express-backend")
     .then(() => console.log("Connected to Database"))
-    .catch((err) => console.log(`Error: ${err}`))
+    .catch((err) => console.log("Error:", err))
 
 
 // Middlewares
