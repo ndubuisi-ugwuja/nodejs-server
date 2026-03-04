@@ -8,9 +8,9 @@ const {GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRETE, CALLBACK_URL} = process.env
 export default passport.use(
 
     new Strategy({
-        GOOGLE_CLIENT_ID,
-        GOOGLE_CLIENT_SECRETE,
-        CALLBACK_URL,
+        clientID: GOOGLE_CLIENT_ID,
+        clientSecret: GOOGLE_CLIENT_SECRETE,
+        callbackURL: CALLBACK_URL,
         scope: ['profile', 'email']
     }, 
     async(accessToken, refreshToken, profile, done) => {
