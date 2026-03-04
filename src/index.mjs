@@ -3,6 +3,7 @@ import { query, validationResult, body, matchedData, checkSchema } from "express
 import { createUserValidationSchema } from "./utils/validationSchemas.mjs";
 import mongoose from "mongoose"
 import { User } from "./mongoose/schema/user.mjs";
+import passport from "passport";
 import 'dotenv/config'
 
 //http://localhost:3000/api/auth/google/redirect
@@ -30,6 +31,8 @@ const resolveIndexByUserId = (request, response, next) => {
 }
 
 app.use(express.json())
+app.use(passport.initialize())
+app.use(passport.session())
 
 const {PORT} = process.env || 3000
 
