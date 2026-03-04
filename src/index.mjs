@@ -5,6 +5,7 @@ import mongoose from "mongoose"
 import { User } from "./mongoose/schema/user.mjs";
 import 'dotenv/config'
 
+//http://localhost:3000/api/auth/google/redirect
 const app = express()
 
 mongoose.connect("mongodb://localhost/express-backend")
