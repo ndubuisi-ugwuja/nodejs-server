@@ -3,7 +3,6 @@ import { query, validationResult, matchedData, checkSchema } from "express-valid
 import { createUserValidationSchema } from "./utils/validationSchemas.mjs";
 import mongoose from "mongoose"
 import { User } from "./mongoose/schema/user.mjs";
-import passport from "passport";
 import 'dotenv/config'
 
 const app = express()
@@ -28,10 +27,6 @@ const resolveIndexByUserId = (request, response, next) => {
     request.parsedId = parsedId
     next()
 }
-
-app.use(express.json())
-app.use(passport.initialize())
-app.use(passport.session())
 
 const {PORT} = process.env || 3000
 
