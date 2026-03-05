@@ -1,5 +1,5 @@
-import express, { request, response } from "express";
-import { query, validationResult, body, matchedData, checkSchema } from "express-validator"
+import express from "express";
+import { query, validationResult, matchedData, checkSchema } from "express-validator"
 import { createUserValidationSchema } from "./utils/validationSchemas.mjs";
 import mongoose from "mongoose"
 import { User } from "./mongoose/schema/user.mjs";
