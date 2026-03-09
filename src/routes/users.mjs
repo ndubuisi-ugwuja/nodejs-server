@@ -5,5 +5,5 @@ const router = Router()
 router.get("/api/user", (request, response) => {
     console.log(request.params)
 
-    return response.status(200)
+    response.status(200).send({msg: "This is the root directory from router"})
 })
