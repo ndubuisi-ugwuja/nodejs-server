@@ -32,9 +32,9 @@ const {PORT} = process.env || 3000
 
 const mockUsers = [{id: 1, name: "Ndubuisi", username: "Ndu123"}, {id: 2, name: "Jiovta", username: "Jio123"}, {id: 3, name: "Ugwuja", username: "Ugw123"},]
 
-/*app.get("/", (request, response) => {
+app.get("/", (request, response) => {
     response.status(200).send({msg: "This is the root directory"})
-})*/
+})
 
 // Query parameters
 app.get("/api/users", query("filter").isString().withMessage("Must be a string").notEmpty().withMessage("Must not be empty").isLength({min: 3, max:10}).withMessage("Must be 3 - 10 chars"), (request, response) => {
