@@ -48,9 +48,6 @@ app.get("/api/users", query("filter").isString().withMessage("Must be a string")
     )
 
     return response.status(200).send(mockUsers)
-
-    // Here when we visit the end point http://localhost:3000/api/users?filter=name&value=Nd, 
-    // it filters by name and returns names that includes Nd
 })
 
 // Route parameter
