@@ -34,3 +34,7 @@
 - Post request adds data to our database
 - Put request updates the entire data field in our database
 - Patch request updates part of our entire data field in our database
+
+## Section cookies
+
+Cookies are small piece of data a server sends to the client on HTTP request
