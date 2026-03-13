@@ -37,4 +37,4 @@
 
 ## Section cookies
 
-Cookies are small piece of data a server sends to the client on HTTP request
+Cookies are small piece of data a server sends to the client on HTTP request. They are basically used for session management. The client sends back the cookies to the server to retrieve their last session.
