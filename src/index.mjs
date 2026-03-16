@@ -38,6 +38,7 @@ const mockUsers = [{id: 1, name: "Ndubuisi", username: "Ndu123"}, {id: 2, name: 
 
 app.get("/", (request, response) => {
     response.cookie("cookies", "base url cookie", {maxAge: 60000 * 60}) // expires in 1hr
+    console.log(request.cookies)
     response.status(200).send({msg: "This is the root directory"})
 })
 
