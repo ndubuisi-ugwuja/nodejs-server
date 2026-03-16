@@ -40,3 +40,5 @@
 Cookies are small piece of data a server sends to the client on HTTP request. They are basically used for session management. The client stores it and automatically sends it back with every future request to that same server. 
 
 HTTP is stateless — every request is a blank slate. The server has no memory of who you are between requests. Cookies give the server a way to "tag" your browser so it can recognize you on the next visit.
+
+Sessions represent the duration of a user in a website
