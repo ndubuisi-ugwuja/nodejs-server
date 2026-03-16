@@ -42,7 +42,7 @@ app.get("/", (request, response) => {
     response.status(200).send({msg: "This is the root directory"})
 })
 
-// Query parameters
+// Query parameter
 app.get("/api/users", query("filter").isString().withMessage("Must be a string").notEmpty().withMessage("Must not be empty").isLength({min: 3, max:10}).withMessage("Must be 3 - 10 chars"), (request, response) => {
     const result = validationResult(request)
     console.log(result)
