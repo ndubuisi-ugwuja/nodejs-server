@@ -1,11 +1,15 @@
 import express from "express";
 import { query, validationResult, matchedData, checkSchema } from "express-validator"
 import { createUserValidationSchema } from "./utils/validationSchemas.mjs";
+import cookieParser from "cookie-parser";
 import mongoose from "mongoose"
 import { User } from "./mongoose/schema/user.mjs";
 import 'dotenv/config'
 
 const app = express()
+
+app.use(express.json())
+app.use(cookieParser())
 
 mongoose.connect("mongodb://localhost/express-backend")
     .then(() => console.log("Connected to Database"))
