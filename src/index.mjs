@@ -2,6 +2,7 @@ import express from "express";
 import { query, validationResult, matchedData, checkSchema } from "express-validator"
 import { createUserValidationSchema } from "./utils/validationSchemas.mjs";
 import cookieParser from "cookie-parser";
+import session from "express-session";
 import mongoose from "mongoose"
 import { User } from "./mongoose/schema/user.mjs";
 import 'dotenv/config'
