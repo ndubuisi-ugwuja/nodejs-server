@@ -16,7 +16,7 @@ mongoose.connect("mongodb://localhost/express-backend")
     .catch((err) => console.log("Error:", err))
 
 
-// Middleware
+// Middlewares
 const resolveIndexByUserId = (request, response, next) => {
     const {params: {id}} = request
 
