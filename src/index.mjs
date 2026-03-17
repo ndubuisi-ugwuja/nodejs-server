@@ -15,7 +15,9 @@ app.use(session({
     secret: "dxx13q",
     saveUninitialized: false,
     resave: false,
-    
+    cookie: {
+        maxAge: 60000 * 60, // 1 hr
+    }
 }))
 
 mongoose.connect("mongodb://localhost/express-backend")
