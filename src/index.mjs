@@ -11,6 +11,7 @@ const app = express()
 
 app.use(express.json())
 app.use(cookieParser())
+app.use(session())
 
 mongoose.connect("mongodb://localhost/express-backend")
     .then(() => console.log("Connected to Database"))
