@@ -11,7 +11,9 @@ const app = express()
 
 app.use(express.json())
 app.use(cookieParser())
-app.use(session())
+app.use(session({
+    secrete: "dxx13q"
+}))
 
 mongoose.connect("mongodb://localhost/express-backend")
     .then(() => console.log("Connected to Database"))
