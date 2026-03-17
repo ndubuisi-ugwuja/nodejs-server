@@ -12,7 +12,7 @@ const app = express()
 app.use(express.json())
 app.use(cookieParser())
 app.use(session({
-    secrete: "dxx13q"
+    secret: "dxx13q"
 }))
 
 mongoose.connect("mongodb://localhost/express-backend")
