@@ -12,7 +12,7 @@ const app = express()
 app.use(express.json())
 app.use(cookieParser())
 app.use(session({
-    secret: "dxx13q",
+    secret: "dxx13",
     saveUninitialized: false,
     resave: false,
     cookie: {
