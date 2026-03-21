@@ -46,9 +46,9 @@ const {PORT} = process.env || 3000
 const mockUsers = [{id: 1, name: "Ndubuisi", username: "Ndu123"}, {id: 2, name: "Jiovta", username: "Jio123"}, {id: 3, name: "Ugwuja", username: "Ugw123"},]
 
 app.get("/", (request, response) => {
+    request.session.visited = true
     response.cookie("Test cookies", "base url cookie", {maxAge: 60000 * 60}) // expires in 1min (unit in milliseconds)
     response.status(200).send({msg: "This is the root directory"})
-    request.session.visited = true
 })
 
 // Query parameters
