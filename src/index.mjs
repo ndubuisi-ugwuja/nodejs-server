@@ -49,7 +49,7 @@ app.get("/", (request, response) => {
     request.session.visited = true
     console.log(request.session)
     console.log(request.session.id)
-    request.sectionStore.get()
+    request.sessionStore.get()
     response.cookie("Test cookies", "base url cookie", {maxAge: 60000 * 60}) // expires in 1min (unit in milliseconds)
     response.status(200).send({msg: "This is the root directory"})
 })
