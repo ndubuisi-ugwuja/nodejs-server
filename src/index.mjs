@@ -52,6 +52,7 @@ app.get("/", (request, response) => {
     request.sessionStore.get(request.session.id, (err, sessionData) => {
         if(err) {
             console.error(err)
+            throw err
         }
     })
     response.cookie("Test cookies", "base url cookie", {maxAge: 60000 * 60}) // expires in 1min (unit in milliseconds)
