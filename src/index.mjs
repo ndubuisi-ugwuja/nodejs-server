@@ -54,6 +54,7 @@ app.get("/", (request, response) => {
             console.error(err)
             throw err
         }
+        console.log(sessionData)
     })
     response.cookie("Test cookies", "base url cookie", {maxAge: 60000 * 60}) // expires in 1min (unit in milliseconds)
     response.status(200).send({msg: "This is the root directory"})
