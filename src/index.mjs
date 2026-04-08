@@ -153,7 +153,7 @@ app.post("/api/auth", (request, response)=> {
     }} = request
 
     const findUser = mockUsers.find(user => user.username === username)
-    if(!findUser) return response.status(404).send({msg: "User not found"})
+    if(!findUser) return response.status(401).send({msg: "User not authenticated"})
 })
 
 // Simple virtual cart system
