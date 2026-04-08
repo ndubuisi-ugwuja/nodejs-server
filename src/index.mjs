@@ -152,6 +152,10 @@ app.post("/api/cart", (request, response) => {
     const {body: item} = request
 
     const {cart} = request.session
+
+    if(cart) {
+        cart.push(item)
+    }
 })
 
 app.listen(PORT, () => {
