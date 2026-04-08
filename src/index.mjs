@@ -155,6 +155,8 @@ app.post("/api/cart", (request, response) => {
 
     if(cart) {
         cart.push(item)
+    } else {
+        request.session.cart = [item]
     }
 })
 
