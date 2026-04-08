@@ -146,6 +146,9 @@ app.delete("/api/users/:id", resolveIndexByUserId, (request, response) => {
 })
 
 // Simple virtual cart system
+app.post("/api/cart", (request, response) => {
+    
+})
 
 app.listen(PORT, () => {
     console.log(`Running on port ${PORT}`)
