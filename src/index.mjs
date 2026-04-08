@@ -145,6 +145,11 @@ app.delete("/api/users/:id", resolveIndexByUserId, (request, response) => {
     return response.status(200).send(mockUsers)   
 })
 
+// Authentication endppoint
+app.post("/api/auth", (request, response)=> {
+
+})
+
 // Simple virtual cart system
 app.post("/api/cart", (request, response) => {
     if(!request.session.user) return response.sendStatus(401)
