@@ -158,6 +158,8 @@ app.post("/api/cart", (request, response) => {
     } else {
         request.session.cart = [item]
     }
+
+    return response.status(201).send(item)
 })
 
 app.listen(PORT, () => {
