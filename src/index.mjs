@@ -147,7 +147,10 @@ app.delete("/api/users/:id", resolveIndexByUserId, (request, response) => {
 
 // Authentication endppoint
 app.post("/api/auth", (request, response)=> {
-    const {body} = request
+    const {body: {
+        username,
+        password
+    }} = request
 })
 
 // Simple virtual cart system
