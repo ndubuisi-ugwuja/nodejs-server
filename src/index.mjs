@@ -151,6 +151,8 @@ app.post("/api/auth", (request, response)=> {
         username,
         password
     }} = request
+
+    const findUser = mockUsers.find(user => user.username === username)
 })
 
 // Simple virtual cart system
