@@ -145,6 +145,8 @@ app.delete("/api/users/:id", resolveIndexByUserId, (request, response) => {
     return response.status(200).send(mockUsers)   
 })
 
+// Simple virtual cart system
+
 app.listen(PORT, () => {
     console.log(`Running on port ${PORT}`)
 })
