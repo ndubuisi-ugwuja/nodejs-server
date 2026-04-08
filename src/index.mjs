@@ -148,6 +148,8 @@ app.delete("/api/users/:id", resolveIndexByUserId, (request, response) => {
 // Simple virtual cart system
 app.post("/api/cart", (request, response) => {
     if(!request.session.user) return response.sendStatus(401)
+
+    const {body: item} = request
 })
 
 app.listen(PORT, () => {
