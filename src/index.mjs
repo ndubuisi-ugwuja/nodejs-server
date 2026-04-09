@@ -157,6 +157,7 @@ app.post("/api/auth", (request, response)=> {
         return response.status(401).send({msg: "Bad credentials"})
 
     request.session.user = findUser
+    return response.status(200).send(findUser)
 })
 
 // Simple virtual cart system
