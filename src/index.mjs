@@ -160,6 +160,11 @@ app.post("/api/auth", (request, response)=> {
     return response.status(200).send(findUser)
 })
 
+// Authentication status endppoint
+app.get("/api/auth/status", (request, response) => {
+    
+})
+
 // Simple virtual cart system
 app.post("/api/cart", (request, response) => {
     if(!request.session.user) return response.sendStatus(401)
