@@ -162,7 +162,7 @@ app.post("/api/auth", (request, response)=> {
 
 // Authentication status endppoint
 app.get("/api/auth/status", (request, response) => {
-    
+    if(request.session.user) return response.status(200)
 })
 
 // Simple virtual cart system
