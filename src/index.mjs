@@ -160,7 +160,7 @@ app.post("/api/auth", (request, response)=> {
     return response.status(200).send(findUser)
 })
 
-// Authentication status endppoint
+// Authentication status endpoint
 app.get("/api/auth/status", (request, response) => {
     if(!request.session.user) return response.status(401).send({msg: "User not authenticated"})
 
