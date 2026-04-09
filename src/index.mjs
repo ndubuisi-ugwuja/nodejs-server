@@ -154,6 +154,8 @@ app.post("/api/auth", (request, response)=> {
 
     const findUser = mockUsers.find(user => user.username === username)
     if(!findUser) return response.status(401).send({msg: "Bad credentials"})
+    
+    if(findUser.password !== password) return response.status(401).send({msg: "Bad credentials"})
 })
 
 // Simple virtual cart system
