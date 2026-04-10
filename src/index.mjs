@@ -187,7 +187,7 @@ app.post("/api/cart", (request, response) => {
 app.get("/api/cart", (request, response) => {
     if(!request.session.user) return response.sendStatus(401)
 
-    return response.status(200).send(request.session.cart)
+    return response.status(200).send(request.session.cart ?? [])
 })
 
 app.listen(PORT, () => {
