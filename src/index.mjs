@@ -162,6 +162,8 @@ app.post("/api/auth", (request, response)=> {
 
 // Authentication status endpoint
 app.get("/api/auth/status", (request, response) => {
+    request.sessionStore.get()
+
     if(!request.session.user) return response.status(401).send({msg: "User not authenticated"})
 
     return response.status(200).send({msg: "User is authenticated"})
