@@ -184,6 +184,10 @@ app.post("/api/cart", (request, response) => {
     return response.status(201).send(item)
 })
 
+app.get("/api/cart", (request, response) => {
+    return response.status(200).send()
+})
+
 app.listen(PORT, () => {
     console.log(`Running on port ${PORT}`)
 })
