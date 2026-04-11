@@ -8,6 +8,7 @@ import Passport from "passport";
 import mongoose from "mongoose"
 import { User } from "./mongoose/schema/user.mjs";
 import 'dotenv/config'
+import passport from "passport";
 
 const app = express()
 
@@ -21,6 +22,8 @@ app.use(session({
         maxAge: 60000 * 60, // 1 hour
     }
 }))
+
+app.use(passport.initialize())
 
 mongoose.connect("mongodb://localhost/express-backend")
     .then(() => console.log("Connected to Database"))
