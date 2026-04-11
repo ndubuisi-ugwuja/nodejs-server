@@ -24,6 +24,7 @@ app.use(session({
 }))
 
 app.use(passport.initialize())
+app.use(passport.session())
 
 mongoose.connect("mongodb://localhost/express-backend")
     .then(() => console.log("Connected to Database"))
