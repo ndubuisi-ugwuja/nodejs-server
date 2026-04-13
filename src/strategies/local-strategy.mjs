@@ -7,9 +7,9 @@ passport.use(
     new Strategy((username, password, done) => {
         try {
             const findUser = mockUsers.find((user) => user.username === username)
-            if(!findUser) throw new Error("Bad credentials")
+            if(!findUser || findUser.password !== password) throw new Error("Bad credentials")    
         } catch(err) {
-            console.error(err)
+            done()
         }
     })
 )
