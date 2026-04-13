@@ -154,17 +154,7 @@ app.delete("/api/users/:id", resolveIndexByUserId, (request, response) => {
 
 // Authentication endpoint
 app.post("/api/auth", passport.authenticate("local"), (request, response) => {
-    const {body: {
-        username,
-        password
-    }} = request
-
-    const findUser = mockUsers.find(user => user.username === username)
-    if(!findUser || findUser.password !== password) 
-        return response.status(401).send({msg: "Bad credentials"})
-
-    request.session.user = findUser
-    return response.status(200).send(findUser)
+    
 })
 
 // Authentication status endpoint
