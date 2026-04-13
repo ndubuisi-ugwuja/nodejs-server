@@ -5,7 +5,11 @@ const mockUsers = [{id: 1, name: "Ndubuisi", username: "Ndu123", password: "123"
 
 passport.use(
     new Strategy((username, password, done) => {
-        const findUser = mockUsers.find((user) => user.username === username)
-        if(!findUser) return response.status(401).send({msg: "Bad credentials"})
+        try {
+            const findUser = mockUsers.find((user) => user.username === username)
+            if(!findUser) throw new Error("Bad credentials")
+        } catch(err) {
+
+        }
     })
 )
