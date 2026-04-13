@@ -9,7 +9,7 @@ passport.use(
             const findUser = mockUsers.find((user) => user.username === username)
             if(!findUser) throw new Error("Bad credentials")
         } catch(err) {
-
+            console.error(err)
         }
     })
 )
