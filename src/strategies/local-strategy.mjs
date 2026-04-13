@@ -6,5 +6,6 @@ const mockUsers = [{id: 1, name: "Ndubuisi", username: "Ndu123", password: "123"
 passport.use(
     new Strategy((username, password, done) => {
         const findUser = mockUsers.find((user) => user.username === username)
+        if(!findUser)
     })
 )
