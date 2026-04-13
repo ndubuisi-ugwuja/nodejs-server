@@ -5,7 +5,16 @@ passport.serializeUser((user, done) => {
     done(null, user.id)
 })
 
-passport.deserializeUser((id, done) => {})
+passport.deserializeUser((id, done) => {
+    try {
+        const findUser = mockUsers.find((user) => user.id === id)
+        if(!findUser) throw new Error("Bad credentials")  
+                
+        done(null, findUser)
+    } catch(err) {
+        done(err, null)
+    }
+})
 
 const mockUsers = [{id: 1, name: "Ndubuisi", username: "Ndu123", password: "123"}, {id: 2, name: "Jiovta", username: "Jio123", password: "1234"}, {id: 3, name: "Ugwuja", username: "Ugw123", password: "12345"},]
 
