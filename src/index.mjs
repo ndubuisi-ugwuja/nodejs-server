@@ -159,7 +159,7 @@ app.post("/api/auth", passport.authenticate("local"), (request, response) => {
 
 // Authentication status endpoint
 app.get("/api/auth/status", (request, response) => {
-    if(!request.session.user) return response.status(401).send({msg: "User not authenticated"})
+    if(!request.user) return response.status(401).send({msg: "User not authenticated"})
 
     return response.status(200).send({msg: "User is authenticated"})
 })
