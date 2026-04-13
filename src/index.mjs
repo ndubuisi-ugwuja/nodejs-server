@@ -153,7 +153,7 @@ app.delete("/api/users/:id", resolveIndexByUserId, (request, response) => {
 })
 
 // Authentication endpoint
-app.post("/api/auth", (request, response)=> {
+app.post("/api/auth", passport.authenticate(request, response)=> {
     const {body: {
         username,
         password
