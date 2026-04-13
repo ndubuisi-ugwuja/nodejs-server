@@ -164,6 +164,9 @@ app.get("/api/auth/status", (request, response) => {
     return response.status(200).send({msg: "User is authenticated"})
 })
 
+// Logout endpoint
+app.post("/api/auth/logout", (request, response) => {})
+
 // Simple virtual cart system
 app.post("/api/cart", (request, response) => {
     if(!request.session.user) return response.sendStatus(401)
