@@ -170,6 +170,7 @@ app.post("/api/auth/logout", (request, response) => {
     
     request.logout((err) => {
         if(err) return response.sendStatus(400)
+        response.sendStatus(200)
     })
 })
 
