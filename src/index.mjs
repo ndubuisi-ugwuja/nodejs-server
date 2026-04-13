@@ -152,7 +152,7 @@ app.delete("/api/users/:id", resolveIndexByUserId, (request, response) => {
     return response.status(200).send(mockUsers)   
 })
 
-// Authentication endpoint
+// Local authentication endpoint
 app.post("/api/auth", passport.authenticate("local"), (request, response) => {
     response.status(200).send({msg: "Logging success"})
 })
