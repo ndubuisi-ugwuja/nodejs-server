@@ -10,7 +10,7 @@ passport.deserializeUser((id, done) => {
         const findUser = mockUsers.find((user) => user.id === id)
         if(!findUser) throw new Error("Bad credentials")  
                 
-        done(null, findUser)
+        done(null, user)
     } catch(err) {
         done(err, null)
     }
