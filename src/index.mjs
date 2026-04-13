@@ -152,7 +152,7 @@ app.delete("/api/users/:id", resolveIndexByUserId, (request, response) => {
     return response.status(200).send(mockUsers)   
 })
 
-// Authentication endppoint
+// Authentication endpoint
 app.post("/api/auth", (request, response)=> {
     const {body: {
         username,
