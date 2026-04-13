@@ -168,7 +168,9 @@ app.get("/api/auth/status", (request, response) => {
 app.post("/api/auth/logout", (request, response) => {
     if(!request.user) return response.status(401).send({msg: "User not authenticated"})
     
-    request.logout()
+    request.logout((err) => {
+        if(err) return response.sendStatus(400)
+    })
 })
 
 // Simple virtual cart system
