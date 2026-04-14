@@ -1,7 +1,6 @@
 import express from "express";
 import { query, validationResult, matchedData, checkSchema } from "express-validator"
 import { createUserValidationSchema } from "./utils/validationSchemas.mjs";
-import { resolveIndexByUserId } from "./utils/middlewares";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import passport from "passport";
@@ -93,44 +92,51 @@ app.post("/api/users", checkSchema(createUserValidationSchema), async (request, 
 })                       
 
 // Put Request
-app.put("/api/users/:id", resolveIndexByUserId, (request, response) => {
+app.put("/api/users/:username", checkSchema(createUserValidationSchema), async (request, response) => {
     const result = validationResult(request)
     if(!result.isEmpty())
         return response.status(400).send({error: result.array()})
 
-    const data = matchedData(request)
-    console.log(data)
-    
-    const {findUserIndex, parsedId} = request
-    mockUsers[findUserIndex] = {id: parsedId, ...data}
 
-    console.log(mockUsers)
+    const { username } = request.params  // old username — for the filter
+    const data = matchedData(request, { locations: ["body"] })
 
-    return response.status(200).send(mockUsers)
+    try {
+        const updatedUser = await User.findOneAndReplace(
+            { username },
+            data,
+            { new: true, runValidators: true }
+        )
+
+        if (!updatedUser) return response.status(404).json({ message: "User not found" })
+        return response.status(200).json(updatedUser)
+    } catch (error) {
+        return response.status(500).json({ message: "Internal server error" })
+    }
 })
 
 // Patch Request
-app.patch("/api/users/:id", resolveIndexByUserId, (request, response) => {
-    const result = validationResult(request)
+app.patch("/api/users/:username", async (request, response) => {
+    const { username } = request.params
+        const updatedUser = await User.findOneAndUpdate(
+            { username },
+            { $set: request.body },
+            { new: true }
+        )
 
-    if(!result.isEmpty())
-        return response.status(400).send({error: result.array()})
+        if (!updatedUser) return response.status(404).json({ message: "User not found" })
 
-    const {body, findUserIndex} = request
-    mockUsers[findUserIndex] = {...mockUsers[findUserIndex], ...body}
-    console.log(mockUsers)
-
-    return response.status(200).send(mockUsers)
+        return response.status(200).json(updatedUser)
 })
 
-// Delete Request
+/* Delete Request
 app.delete("/api/users/:id", resolveIndexByUserId, (request, response) => {
     const {findUserIndex} = request
     mockUsers.splice(findUserIndex, 1)
     console.log(mockUsers)
 
     return response.status(200).send(mockUsers)   
-})
+})*/
 
 // Local authentication endpoint
 app.post("/api/auth", passport.authenticate("local"), (request, response) => {
