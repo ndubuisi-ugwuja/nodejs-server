@@ -3,7 +3,7 @@ import { query, validationResult, matchedData, checkSchema } from "express-valid
 import { createUserValidationSchema } from "./utils/validationSchemas.mjs";
 import cookieParser from "cookie-parser";
 import session from "express-session";
-import Passport from "passport";
+import passport from "passport";
 import "./strategies/local-strategy.mjs"
 import mongoose from "mongoose"
 import { User } from "./mongoose/schema/user.mjs";
