@@ -105,7 +105,7 @@ app.put("/api/users/:username", checkSchema(createUserValidationSchema), async (
         const updatedUser = await User.findOneAndReplace(
             { username },
             data,
-            { new: true, runValidators: true }
+            { new: true }
         )
 
         if (!updatedUser) return response.status(404).json({ message: "User not found" })
