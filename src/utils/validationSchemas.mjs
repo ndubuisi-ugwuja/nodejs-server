@@ -1,5 +1,5 @@
 export const createUserValidationSchema = {
-    name: {
+    username: {
         notEmpty: {
             errorMessage: "name cannot be empty"
         },
@@ -14,7 +14,7 @@ export const createUserValidationSchema = {
             errorMessage: "Must be between 3 and 32 chars"
         }
     },
-    username: {
+    password: {
         notEmpty: {
             errorMessage: "Username cannot be empty"
         },
