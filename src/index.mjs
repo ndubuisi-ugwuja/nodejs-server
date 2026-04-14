@@ -97,7 +97,6 @@ app.post("/api/users", checkSchema(createUserValidationSchema), async (request, 
         return response.status(400).send({error: result.array()})
 
     const data = matchedData(request)
-    console.log(data)
     
     const newUser = new User(data)
     try {
