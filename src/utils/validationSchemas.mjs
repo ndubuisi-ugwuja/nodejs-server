@@ -16,10 +16,10 @@ export const createUserValidationSchema = {
     },
     password: {
         notEmpty: {
-            errorMessage: "password cannot be empty"
+            errorMessage: "Password cannot be empty"
         },
         isString: {
-            errorMessage: "Username must be a string"
+            errorMessage: "Password must be a string"
         },
         isLength: {
             options: {
