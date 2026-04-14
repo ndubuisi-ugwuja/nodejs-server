@@ -32,8 +32,6 @@ mongoose.connect("mongodb://localhost/express-backend")
 
 const {PORT} = process.env || 3000
 
-const mockUsers = [{id: 1, name: "Ndubuisi", username: "Ndu123", password: "123"}, {id: 2, name: "Jiovta", username: "Jio123", password: "1234"}, {id: 3, name: "Ugwuja", username: "Ugw123", password: "12345"},]
-
 app.get("/", (request, response) => {
     request.session.visited = true
     console.log(request.session)
@@ -50,17 +48,19 @@ app.get("/", (request, response) => {
 })
 
 // Query parameter
-app.get("/api/users", query("filter").isString().withMessage("Must be a string").notEmpty().withMessage("Must not be empty").isLength({min: 3, max:10}).withMessage("Must be 3 - 10 chars"), (request, response) => {
+app.get("/api/users", query("filter").isString().withMessage("Must be a string").notEmpty().withMessage("Must not be empty").isLength({min: 3, max:10}).withMessage("Must be 3 - 10 chars"), async (request, response) => {
     const result = validationResult(request)
     console.log(result)
 
-    const {query: {filter, value}} = request
+    const { query: { filter, value } } = request
 
-    if(filter && value) return response.send(
-        mockUsers.filter((user) => user[filter].includes(value))
-    )
+    if (filter && value) {
+        const filteredUsers = await User.find({ [filter]: { $regex: value, $options: "i" } })
+        return response.status(200).send(filteredUsers)
+    }
 
-    return response.status(200).send(mockUsers)
+    const allUsers = await User.find()
+    return response.status(200).send(allUsers)
 })
 
 // Route parameter
