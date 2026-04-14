@@ -65,7 +65,7 @@ app.get("/api/users", query("filter").isString().withMessage("Must be a string")
 
 // Route parameter
 app.get("/api/users/:username", async (request, response) => {
-    const {username} = request
+    const {params: {username}} = request
     const findUser = await User.findOne({username})
 
     console.log(findUser)
