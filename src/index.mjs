@@ -98,7 +98,7 @@ app.put("/api/users/:username", checkSchema(createUserValidationSchema), async (
         return response.status(400).send({error: result.array()})
 
 
-    const { username } = request.params  // old username — for the filter
+    const { params: {username} } = request
     const data = matchedData(request, { locations: ["body"] })
 
     try {
@@ -117,7 +117,7 @@ app.put("/api/users/:username", checkSchema(createUserValidationSchema), async (
 
 // Patch Request
 app.patch("/api/users/:username", async (request, response) => {
-    const { username } = request.params
+    const { params: {username} } = request
         const updatedUser = await User.findOneAndUpdate(
             { username },
             { $set: request.body },
@@ -129,14 +129,15 @@ app.patch("/api/users/:username", async (request, response) => {
         return response.status(200).json(updatedUser)
 })
 
-/* Delete Request
-app.delete("/api/users/:id", resolveIndexByUserId, (request, response) => {
-    const {findUserIndex} = request
-    mockUsers.splice(findUserIndex, 1)
-    console.log(mockUsers)
+// Delete Request
+app.delete("/api/users/:username", async (request, response) => {
+    const { params: {username} } = request
+    const deletedUser = await User.findOneAndDelete({ username })
 
-    return response.status(200).send(mockUsers)   
-})*/
+    if (!deletedUser) return response.status(404).json({ message: "User not found" })
+
+    return response.status(200).json({ message: "User deleted successfully" })   
+})
 
 // Local authentication endpoint
 app.post("/api/auth", passport.authenticate("local"), (request, response) => {
