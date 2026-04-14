@@ -1,7 +1,7 @@
 export const createUserValidationSchema = {
     username: {
         notEmpty: {
-            errorMessage: "name cannot be empty"
+            errorMessage: "username cannot be empty"
         },
         isString: {
             errorMessage: "name must be a string"
