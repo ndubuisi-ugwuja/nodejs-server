@@ -63,7 +63,7 @@ app.get("/api/users", query("filter").isString().withMessage("Must be a string")
 })
 
 // Route parameter
-app.get("/api/users/:username", resolveIndexByUserId, (request, response) => {
+app.get("/api/users/:username", async (request, response) => {
     const {findUserIndex} = request
     const findUser = mockUsers[findUserIndex]
 
