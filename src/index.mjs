@@ -8,7 +8,6 @@ import "./strategies/local-strategy.mjs"
 import mongoose from "mongoose"
 import { User } from "./mongoose/schema/user.mjs";
 import 'dotenv/config'
-import passport from "passport";
 
 const app = express()
 
