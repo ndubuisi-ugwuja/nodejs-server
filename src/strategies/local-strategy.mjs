@@ -20,7 +20,7 @@ passport.deserializeUser((id, done) => {
 export default passport.use(
     new Strategy((username, password, done) => {
         try {
-            const findUser = mockUsers.find((user) => user.username === username)
+            const findUser = User.findOne()
             if(!findUser || findUser.password !== password) throw new Error("Bad credentials")  
                 
             done(null, findUser)
