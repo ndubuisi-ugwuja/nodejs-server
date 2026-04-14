@@ -1,6 +1,7 @@
 import express from "express";
 import { query, validationResult, matchedData, checkSchema } from "express-validator"
 import { createUserValidationSchema } from "./utils/validationSchemas.mjs";
+import { resolveIndexByUserId } from "./utils/middlewares";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import passport from "passport";
