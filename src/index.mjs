@@ -92,7 +92,6 @@ app.get("/api/users/:id", resolveIndexByUserId, (request, response) => {
 // Post Request
 app.post("/api/users", checkSchema(createUserValidationSchema), async (request, response) => {
     const result = validationResult(request)
-    console.log(result)
     
     if(!result.isEmpty())
         return response.status(400).send({error: result.array()})
