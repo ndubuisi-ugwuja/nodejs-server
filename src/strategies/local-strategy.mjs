@@ -21,8 +21,6 @@ export default passport.use(
     new Strategy(async (username, password, done) => {
         try {
             const findUser = await User.findOne({username})
-            if(!findUser) throw new Error("Bad credentials") 
-                
             if(!findUser || findUser.password !== password) throw new Error("Bad credentials")  
                 
             done(null, findUser)
