@@ -29,23 +29,6 @@ mongoose.connect("mongodb://localhost/express-backend")
     .then(() => console.log("Connected to Database"))
     .catch((err) => console.log("Error:", err))
 
-
-// Middlewares
-const resolveIndexByUserId = (request, response, next) => {
-    const {params: {id}} = request
-
-    const parsedId = parseInt(id)
-
-    if(isNaN(parsedId)) return response.status(400).send({msg: "Id is not a number"})
-
-    const findUserIndex = mockUsers.findIndex((user) => user.id === parsedId)
-
-    if(findUserIndex === -1) return response.status(404).send({msg: "User not found"})
-    request.findUserIndex = findUserIndex
-    request.parsedId = parsedId
-    next()
-}
-
 const {PORT} = process.env || 3000
 
 const mockUsers = [{id: 1, name: "Ndubuisi", username: "Ndu123", password: "123"}, {id: 2, name: "Jiovta", username: "Jio123", password: "1234"}, {id: 3, name: "Ugwuja", username: "Ugw123", password: "12345"},]
@@ -80,7 +63,7 @@ app.get("/api/users", query("filter").isString().withMessage("Must be a string")
 })
 
 // Route parameter
-app.get("/api/users/:id", resolveIndexByUserId, (request, response) => {
+app.get("/api/users/:username", resolveIndexByUserId, (request, response) => {
     const {findUserIndex} = request
     const findUser = mockUsers[findUserIndex]
 
