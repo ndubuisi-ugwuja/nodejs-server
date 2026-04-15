@@ -124,8 +124,7 @@ app.put("/api/users/:username", checkSchema(createUserValidationSchema), async (
 app.patch("/api/users/:username", async (request, response) => {
     const { params: {username} } = request
 
-    const {body: {password}} = request
-    password = hashPassword(password)
+    request.body.password = hashPassword(request.body.password)
 
     const updatedUser = await User.findOneAndUpdate(
         { username },
