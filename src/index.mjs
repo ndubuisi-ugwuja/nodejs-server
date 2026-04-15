@@ -83,7 +83,6 @@ app.post("/api/users", checkSchema(createUserValidationSchema), async (request, 
     const data = matchedData(request)
 
     data.password = hashPassword(data.password)
-    console.log(data)
     
     const newUser = new User(data)
     try {
