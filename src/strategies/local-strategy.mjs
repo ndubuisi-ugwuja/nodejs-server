@@ -1,6 +1,7 @@
 import passport from "passport";
 import { Strategy } from "passport-local";
 import { User } from "../mongoose/schema/user.mjs";
+import { comparePassword } from "../utils/helpers.mjs";
 
 passport.serializeUser((user, done) => {
     done(null, user.id)
@@ -21,7 +22,9 @@ export default passport.use(
     new Strategy(async (username, password, done) => {
         try {
             const findUser = await User.findOne({username})
-            if(!findUser || findUser.password !== password) throw new Error("Bad credentials")  
+            if(!findUser) throw new Error("Bad credentials")  
+
+            if(!comparePassword(password, findUser.password)) throw new Error("Wrong password") 
                 
             done(null, findUser)
         } catch(err) {
