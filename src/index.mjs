@@ -8,6 +8,7 @@ import "./strategies/local-strategy.mjs"
 import mongoose from "mongoose"
 import { User } from "./mongoose/schema/user.mjs";
 import 'dotenv/config'
+import { hashPassword } from "./utils/helpers.mjs";
 
 const app = express()
 
@@ -80,6 +81,8 @@ app.post("/api/users", checkSchema(createUserValidationSchema), async (request, 
         return response.status(400).send({error: result.array()})
 
     const data = matchedData(request)
+
+    data.password = hashPassword()
     
     const newUser = new User(data)
     try {
