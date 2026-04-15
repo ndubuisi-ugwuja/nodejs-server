@@ -104,6 +104,8 @@ app.put("/api/users/:username", checkSchema(createUserValidationSchema), async (
     const { params: {username} } = request
     const data = matchedData(request, { locations: ["body"] })
 
+    data.password = hashPassword(data.password)
+
     try {
         const updatedUser = await User.findOneAndReplace(
             { username },
