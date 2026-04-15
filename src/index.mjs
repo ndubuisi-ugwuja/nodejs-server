@@ -123,15 +123,19 @@ app.put("/api/users/:username", checkSchema(createUserValidationSchema), async (
 // Patch Request
 app.patch("/api/users/:username", async (request, response) => {
     const { params: {username} } = request
-        const updatedUser = await User.findOneAndUpdate(
-            { username },
-            { $set: request.body },
-            { new: true }
-        )
 
-        if (!updatedUser) return response.status(404).json({ message: "User not found" })
+    const {body: {password}} = request
+    password = hashPassword(password)
 
-        return response.status(200).json(updatedUser)
+    const updatedUser = await User.findOneAndUpdate(
+        { username },
+        { $set: request.body },
+        { new: true }
+    )
+
+    if (!updatedUser) return response.status(404).json({ message: "User not found" })
+
+    return response.status(200).json(updatedUser)
 })
 
 // Delete Request
