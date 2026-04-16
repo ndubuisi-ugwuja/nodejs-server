@@ -21,7 +21,8 @@ app.use(session({
     resave: false,
     cookie: {
         maxAge: 60000 * 60, // 1 hour
-    }
+    },
+    store: MongoStore.create()
 }))
 
 app.use(passport.initialize())
