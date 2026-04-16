@@ -6,9 +6,10 @@ import session from "express-session";
 import passport from "passport";
 import "./strategies/local-strategy.mjs"
 import mongoose from "mongoose"
+import MongoStore from "connect-mongo";
 import { User } from "./mongoose/schema/user.mjs";
-import 'dotenv/config'
 import { hashPassword } from "./utils/helpers.mjs";
+import 'dotenv/config'
 
 const app = express()
 
