@@ -22,7 +22,9 @@ app.use(session({
     cookie: {
         maxAge: 60000 * 60, // 1 hour
     },
-    store: MongoStore.create()
+    store: MongoStore.create({
+        client: mongoose.Connection.getClient()
+    })
 }))
 
 app.use(passport.initialize())
