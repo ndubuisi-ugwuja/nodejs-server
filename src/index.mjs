@@ -4,7 +4,7 @@ import { createUserValidationSchema } from "./utils/validationSchemas.mjs";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import passport from "passport";
-import "./strategies/local-strategy.mjs"
+// import "./strategies/local-strategy.mjs"
 import "./strategies/google-strategy.mjs"
 import mongoose from "mongoose"
 import MongoStore from "connect-mongo";
