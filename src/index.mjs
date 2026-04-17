@@ -162,6 +162,7 @@ app.get("/api/auth/google", passport.authenticate('google'), (request, response)
     response.sendStatus(200);
 });
 
+// Google authentication redirect endpoint
 app.get("/api/auth/google/redirect", passport.authenticate('google'), (request, response) => {
     return response.status(200).send('Logged in successfully')
 });
