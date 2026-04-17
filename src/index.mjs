@@ -164,7 +164,7 @@ app.get("/api/google/auth", passport.authenticate('google'), (request, response)
 
 // Google authentication redirect endpoint
 app.get("/api/google/auth/redirect", passport.authenticate('google'), (request, response) => {
-    return response.status(200).send('Logged in successfully')
+    return response.status(200).send({msg: 'Logged in successfully'})
 });
 
 // Authentication status endpoint
