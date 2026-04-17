@@ -157,6 +157,11 @@ app.post("/api/auth", passport.authenticate("local"), (request, response) => {
     response.status(200).send({msg: "Logging success"})
 })
 
+// Google authentication endpoint
+app.post("/api/google/auth", passport.authenticate("google"), (request, response) => {
+    response.status(200).send({msg: "Logging success"})
+})
+
 // Authentication status endpoint
 app.get("/api/auth/status", (request, response) => {
     if(!request.user) return response.status(401).send({msg: "User not authenticated"})
