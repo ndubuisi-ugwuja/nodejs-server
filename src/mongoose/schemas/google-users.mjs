@@ -2,16 +2,16 @@ import mongoose, { Schema } from "mongoose";
 
 const googleUserSchema = mongoose.Schema({
     googleId: {
-        type: mongoose.Schema.Types.String,
+        type: String,
         required: true,
     },
     username: {
-        type: mongoose.Schema.Types.String,
+        type: String,
         required: true,
     },
     
     email: {
-        type: mongoose.Schema.Types.String,
+        type: String,
         required: true,
     }
 });
