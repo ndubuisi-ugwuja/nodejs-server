@@ -8,7 +8,7 @@ import "./strategies/local-strategy.mjs"
 import "./strategies/google-strategy.mjs"
 import mongoose from "mongoose"
 import MongoStore from "connect-mongo";
-import { User } from "./mongoose/schema/user.mjs";
+import { User } from "./mongoose/schemas/user.mjs";
 import { hashPassword } from "./utils/helpers.mjs";
 import 'dotenv/config'
 
