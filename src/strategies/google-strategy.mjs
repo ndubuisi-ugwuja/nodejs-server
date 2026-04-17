@@ -1,6 +1,6 @@
 import passport from "passport";
 import { Strategy } from "passport-google-oauth20";
-import { googleUser } from "../mongoose/schemas/google-users.mjs";
+import { googleUser } from "../mongoose/schema/google-users.mjs";
 import 'dotenv/config'
 
 const {GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRETE, CALLBACK_URL} = process.env
