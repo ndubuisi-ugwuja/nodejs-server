@@ -37,6 +37,29 @@ mongoose.connect("mongodb://localhost/express-backend")
 
 const {PORT} = process.env || 3000
 
+// Unified serializer
+passport.serializeUser((user, done) => {
+    // Tag the id with the user type so we know which model to query later
+    const key = user.googleId
+        ? `google:${user.id}`
+        : `local:${user.id}`;
+    done(null, key);
+});
+
+passport.deserializeUser(async (key, done) => {
+    try {
+        const [type, id] = key.split(":");
+        const findUser = type === "google"
+            ? await googleUser.findById(id)
+            : await User.findById(id);
+
+        if (!findUser) throw new Error("User not found");
+        done(null, findUser);
+    } catch (err) {
+        done(err, null);
+    }
+});
+
 app.get("/", (request, response) => {
     request.session.visited = true
     console.log(request.session)
