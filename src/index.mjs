@@ -158,8 +158,8 @@ app.post("/api/auth", passport.authenticate("local"), (request, response) => {
 })
 
 // Google authentication endpoint
-app.get("/api/auth/google", passport.authenticate('google'), (req, res) => {
-    res.sendStatus(200);
+app.get("/api/auth/google", passport.authenticate('google'), (request, response) => {
+    response.sendStatus(200);
 });
 
 app.get("/api/auth/google/redirect", passport.authenticate('google'), (req, res) => {
