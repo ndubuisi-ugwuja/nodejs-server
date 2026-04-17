@@ -39,7 +39,6 @@ const {PORT} = process.env || 3000
 
 // Unified serializer
 passport.serializeUser((user, done) => {
-    // Tag the id with the user type so we know which model to query later
     const key = user.googleId
         ? `google:${user.id}`
         : `local:${user.id}`;
