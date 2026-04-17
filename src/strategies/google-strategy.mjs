@@ -38,17 +38,3 @@ export default passport.use(
         };
     })
 );
-
-passport.serializeUser((user, done) => {
-    done(null, user.id);
-});
-
-passport.deserializeUser(async(id, done) => {
-    try{
-        const findUser = await googleUser.findById(id);
-        if(!findUser) throw new Error('User not found');
-        done(null, findUser)
-    } catch (err) {
-        done(err, null)
-    }
-});
