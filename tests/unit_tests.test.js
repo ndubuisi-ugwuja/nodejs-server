@@ -4,11 +4,18 @@ jest.mock("../src/strategies/local-strategy.mjs", () => ({}));
 jest.mock("../src/strategies/google-strategy.mjs", () => ({}));
 jest.mock("dotenv/config", () => ({}));
 
-// Mongoose — prevent real DB connection; expose controllable mock methods
+// Mongoose — without __esModule: true, Babel's _interopRequireDefault wraps the
+// mock object differently in each file, producing two separate `connect`
+// references. Adding __esModule: true tells Babel "this already has a proper
+// default export — don't wrap it", so both index.mjs and the test file resolve
+// to the exact same object and share the same mock call history.
 jest.mock("mongoose", () => ({
-  connect: jest.fn().mockResolvedValue({}),
-  Schema: jest.fn().mockImplementation(() => ({})),
-  model: jest.fn(),
+  __esModule: true,
+  default: {
+    connect: jest.fn().mockResolvedValue({}),
+    Schema: jest.fn().mockImplementation(() => ({})),
+    model: jest.fn(),
+  },
 }));
 
 // connect-mongo — avoid real session store
