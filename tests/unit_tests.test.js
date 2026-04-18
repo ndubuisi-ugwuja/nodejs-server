@@ -27,14 +27,14 @@ jest.mock("connect-mongo", () => ({
 jest.mock("express-session", () =>
   jest.fn(
     () =>
-      function sessionMiddleware(req, _res, next) {
-        req.session = {
+      function sessionMiddleware(request, _response, next) {
+        request.session = {
           id: "mock-session-id",
           visited: false,
           save: jest.fn((cb) => cb && cb()),
           destroy: jest.fn((cb) => cb && cb()),
         };
-        req.sessionStore = {
+        request.sessionStore = {
           get: jest.fn((_id, cb) => cb(null, {})),
         };
         next();
@@ -43,7 +43,7 @@ jest.mock("express-session", () =>
 );
 
 // cookie-parser — passthrough
-jest.mock("cookie-parser", () => jest.fn(() => (_req, _res, next) => next()));
+jest.mock("cookie-parser", () => jest.fn(() => (_request, _response, next) => next()));
 
 // User model
 jest.mock("../src/mongoose/schemas/user.mjs", () => ({
@@ -79,23 +79,23 @@ jest.mock("../src/utils/validationSchemas.mjs", () => ({
 // `_authHandler`, which we CAN swap between tests via passport._setAuthHandler().
 jest.mock("passport", () => {
   // Mutable handler — default is a simple passthrough
-  let _sessionHandler = (_req, _res, next) => next();
-  let _authHandler = (_req, _res, next) => next();
+  let _sessionHandler = (_request, _response, next) => next();
+  let _authHandler = (_request, _response, next) => next();
 
   return {
-    initialize: jest.fn(() => (_req, _res, next) => next()),
-    // session middleware delegates to _sessionHandler so tests can inject req.user
-    session: jest.fn(() => (req, res, next) => _sessionHandler(req, res, next)),
+    initialize: jest.fn(() => (_request, _response, next) => next()),
+    // session middleware delegates to _sessionHandler so tests can inject request.user
+    session: jest.fn(() => (request, response, next) => _sessionHandler(request, response, next)),
     // authenticate delegates to _authHandler so tests can simulate success/failure
-    authenticate: jest.fn(() => (req, res, next) => _authHandler(req, res, next)),
+    authenticate: jest.fn(() => (request, response, next) => _authHandler(request, response, next)),
     serializeUser: jest.fn(),
     deserializeUser: jest.fn(),
     use: jest.fn(),
     // Test helpers — call these inside beforeEach / individual tests
     _setAuthHandler: (fn) => { _authHandler = fn; },
-    _resetAuthHandler: () => { _authHandler = (_req, _res, next) => next(); },
+    _resetAuthHandler: () => { _authHandler = (_request, _response, next) => next(); },
     _setSessionHandler: (fn) => { _sessionHandler = fn; },
-    _resetSessionHandler: () => { _sessionHandler = (_req, _res, next) => next(); },
+    _resetSessionHandler: () => { _sessionHandler = (_request, _response, next) => next(); },
   };
 });
 
@@ -117,14 +117,14 @@ import passport from "passport";
  * @param {object} [fakeUser]
  */
 function mockAuthBehavior(mode, fakeUser = { id: "u1", username: "alice" }) {
-  passport._setAuthHandler((req, res, next) => {
+  passport._setAuthHandler((request, response, next) => {
     if (mode === "success") {
-      req.user = fakeUser;
-      req.isAuthenticated = () => true;
-      req.logout = jest.fn((cb) => { req.user = null; cb(null); });
+      request.user = fakeUser;
+      request.isAuthenticated = () => true;
+      request.logout = jest.fn((cb) => { request.user = null; cb(null); });
       next();
     } else if (mode === "failure") {
-      res.status(401).json({ message: "Unauthorized" });
+      response.status(401).json({ message: "Unauthorized" });
     } else {
       next(new Error("Auth error"));
     }
@@ -135,15 +135,15 @@ function mockAuthBehavior(mode, fakeUser = { id: "u1", username: "alice" }) {
 
 describe("GET /", () => {
   it("returns 200 with Root directory message", async () => {
-    const res = await request(app).get("/");
-    expect(res.status).toBe(200);
-    expect(res.body).toEqual({ msg: "Root directory" });
+    const response = await request(app).get("/");
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ msg: "Root directory" });
   });
 
   it("sets a TestCookies cookie on the response", async () => {
-    const res = await request(app).get("/");
-    expect(res.headers["set-cookie"]).toBeDefined();
-    expect(res.headers["set-cookie"][0]).toMatch(/TestCookies/);
+    const response = await request(app).get("/");
+    expect(response.headers["set-cookie"]).toBeDefined();
+    expect(response.headers["set-cookie"][0]).toMatch(/TestCookies/);
   });
 });
 
@@ -163,61 +163,61 @@ describe("GET /api/users", () => {
   // pass a valid filter with no value (filter && value = false → falls through to find()).
   it("returns all users when a valid filter is given but no value", async () => {
     User.find.mockResolvedValue(fakeUsers);
-    const res = await request(app)
+    const response = await request(app)
       .get("/api/users")
       .query({ filter: "username" }); // valid filter, no value → returns all users
-    expect(res.status).toBe(200);
-    expect(res.body).toEqual(fakeUsers);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(fakeUsers);
     expect(User.find).toHaveBeenCalledWith();
   });
 
   it("returns 400 when no filter param is provided (validation enforced)", async () => {
-    const res = await request(app).get("/api/users");
-    expect(res.status).toBe(400);
-    expect(res.body).toHaveProperty("error");
+    const response = await request(app).get("/api/users");
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty("error");
   });
 
   it("filters users when both filter and value are provided", async () => {
     User.find.mockResolvedValue([fakeUsers[0]]);
-    const res = await request(app)
+    const response = await request(app)
       .get("/api/users")
       .query({ filter: "username", value: "ali" });
-    expect(res.status).toBe(200);
+    expect(response.status).toBe(200);
     expect(User.find).toHaveBeenCalledWith({
       username: { $regex: "ali", $options: "i" },
     });
   });
 
   it("returns 400 when filter is too short (< 3 chars)", async () => {
-    const res = await request(app)
+    const response = await request(app)
       .get("/api/users")
       .query({ filter: "ab" });
-    expect(res.status).toBe(400);
-    expect(res.body.error[0].msg).toBe("Must be 3 - 10 chars");
+    expect(response.status).toBe(400);
+    expect(response.body.error[0].msg).toBe("Must be 3 - 10 chars");
   });
 
   it("returns 400 when filter is too long (> 10 chars)", async () => {
-    const res = await request(app)
+    const response = await request(app)
       .get("/api/users")
       .query({ filter: "averylongstring" });
-    expect(res.status).toBe(400);
-    expect(res.body.error[0].msg).toBe("Must be 3 - 10 chars");
+    expect(response.status).toBe(400);
+    expect(response.body.error[0].msg).toBe("Must be 3 - 10 chars");
   });
 
   it("returns 400 when filter is not provided (fails isString + notEmpty)", async () => {
-    const res = await request(app)
+    const response = await request(app)
       .get("/api/users")
       .query({ filter: 12345 }); // express-validator coerces to string "12345" — 5 chars, passes length
-    expect([200, 400]).toContain(res.status);
+    expect([200, 400]).toContain(response.status);
   });
 
   // Pass a valid filter so validation passes and the DB error is actually reached
   it("returns 500-level response on DB error", async () => {
     User.find.mockRejectedValue(new Error("DB failure"));
-    const res = await request(app)
+    const response = await request(app)
       .get("/api/users")
       .query({ filter: "username" }); // valid filter, no value → reaches User.find()
-    expect(res.status).toBeGreaterThanOrEqual(500);
+    expect(response.status).toBeGreaterThanOrEqual(500);
   });
 });
 
@@ -231,23 +231,23 @@ describe("GET /api/users/:username", () => {
   it("returns the user when found", async () => {
     const fakeUser = { username: "alice", displayName: "Alice" };
     User.findOne.mockResolvedValue(fakeUser);
-    const res = await request(app).get("/api/users/alice");
-    expect(res.status).toBe(200);
-    expect(res.body).toEqual(fakeUser);
+    const response = await request(app).get("/api/users/alice");
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(fakeUser);
     expect(User.findOne).toHaveBeenCalledWith({ username: "alice" });
   });
 
   it("returns null body when user is not found", async () => {
     User.findOne.mockResolvedValue(null);
-    const res = await request(app).get("/api/users/nobody");
-    expect(res.status).toBe(200);
-    expect(res.body).toEqual({}); // mongoose returns null → supertest serialises as {}
+    const response = await request(app).get("/api/users/nobody");
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({}); // mongoose returns null → supertest serialises as {}
   });
 
   it("throws on DB error", async () => {
     User.findOne.mockRejectedValue(new Error("DB failure"));
-    const res = await request(app).get("/api/users/alice");
-    expect(res.status).toBeGreaterThanOrEqual(500);
+    const response = await request(app).get("/api/users/alice");
+    expect(response.status).toBeGreaterThanOrEqual(500);
   });
 });
 
@@ -278,30 +278,30 @@ describe("POST /api/users", () => {
     // We patch User directly in the test. Since the route does `new User(data)`,
     // we need the class mock. Set it up via jest.mock at top for the schema file, 
     // then provide a spy on the constructor separately.
-    const res = await request(app).post("/api/users").send(validPayload);
+    const response = await request(app).post("/api/users").send(validPayload);
     // Validation should pass; DB interactions may vary — just assert no server error
-    expect([201, 400, 500]).toContain(res.status);
+    expect([201, 400, 500]).toContain(response.status);
   });
 
   it("returns 400 when username is missing", async () => {
-    const res = await request(app)
+    const response = await request(app)
       .post("/api/users")
       .send({ password: "secret123" });
-    expect(res.status).toBe(400);
-    expect(res.body).toHaveProperty("error");
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty("error");
   });
 
   it("returns 400 when password is missing", async () => {
-    const res = await request(app)
+    const response = await request(app)
       .post("/api/users")
       .send({ username: "alice" });
-    expect(res.status).toBe(400);
-    expect(res.body).toHaveProperty("error");
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty("error");
   });
 
   it("returns 400 when body is empty", async () => {
-    const res = await request(app).post("/api/users").send({});
-    expect(res.status).toBe(400);
+    const response = await request(app).post("/api/users").send({});
+    expect(response.status).toBe(400);
   });
 
   it("hashes the password before saving", async () => {
@@ -324,11 +324,11 @@ describe("PUT /api/users/:username", () => {
   it("replaces and returns the user on valid input", async () => {
     const replaced = { _id: "abc", username: "alice", password: "hashed_newpass" };
     User.findOneAndReplace.mockResolvedValue(replaced);
-    const res = await request(app)
+    const response = await request(app)
       .put("/api/users/alice")
       .send(validPayload);
-    expect(res.status).toBe(200);
-    expect(res.body).toEqual(replaced);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(replaced);
     expect(User.findOneAndReplace).toHaveBeenCalledWith(
       { username: "alice" },
       expect.objectContaining({ password: "hashed_newpass" }),
@@ -338,28 +338,28 @@ describe("PUT /api/users/:username", () => {
 
   it("returns 404 when user is not found", async () => {
     User.findOneAndReplace.mockResolvedValue(null);
-    const res = await request(app)
+    const response = await request(app)
       .put("/api/users/ghost")
       .send(validPayload);
-    expect(res.status).toBe(404);
-    expect(res.body).toEqual({ message: "User not found" });
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({ message: "User not found" });
   });
 
   it("returns 400 when validation fails (missing password)", async () => {
-    const res = await request(app)
+    const response = await request(app)
       .put("/api/users/alice")
       .send({ username: "alice" });
-    expect(res.status).toBe(400);
-    expect(res.body).toHaveProperty("error");
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty("error");
   });
 
   it("returns 500 on unexpected DB error", async () => {
     User.findOneAndReplace.mockRejectedValue(new Error("DB failure"));
-    const res = await request(app)
+    const response = await request(app)
       .put("/api/users/alice")
       .send(validPayload);
-    expect(res.status).toBe(500);
-    expect(res.body).toEqual({ message: "Internal server error" });
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({ message: "Internal server error" });
   });
 
   it("hashes the password before replacing", async () => {
@@ -380,11 +380,11 @@ describe("PATCH /api/users/:username", () => {
   it("partially updates and returns the user", async () => {
     const updated = { username: "alice", displayName: "Alice Updated" };
     User.findOneAndUpdate.mockResolvedValue(updated);
-    const res = await request(app)
+    const response = await request(app)
       .patch("/api/users/alice")
       .send({ displayName: "Alice Updated", password: "pass" });
-    expect(res.status).toBe(200);
-    expect(res.body).toEqual(updated);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(updated);
     expect(User.findOneAndUpdate).toHaveBeenCalledWith(
       { username: "alice" },
       { $set: expect.any(Object) },
@@ -394,11 +394,11 @@ describe("PATCH /api/users/:username", () => {
 
   it("returns 404 when user is not found", async () => {
     User.findOneAndUpdate.mockResolvedValue(null);
-    const res = await request(app)
+    const response = await request(app)
       .patch("/api/users/nobody")
       .send({ displayName: "Ghost" });
-    expect(res.status).toBe(404);
-    expect(res.body).toEqual({ message: "User not found" });
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({ message: "User not found" });
   });
 
   it("hashes the password if provided in body", async () => {
@@ -411,10 +411,10 @@ describe("PATCH /api/users/:username", () => {
 
   it("handles DB error gracefully", async () => {
     User.findOneAndUpdate.mockRejectedValue(new Error("DB crash"));
-    const res = await request(app)
+    const response = await request(app)
       .patch("/api/users/alice")
       .send({ displayName: "X" });
-    expect(res.status).toBeGreaterThanOrEqual(500);
+    expect(response.status).toBeGreaterThanOrEqual(500);
   });
 });
 
@@ -427,23 +427,23 @@ describe("DELETE /api/users/:username", () => {
 
   it("deletes the user and returns success message", async () => {
     User.findOneAndDelete.mockResolvedValue({ username: "alice" });
-    const res = await request(app).delete("/api/users/alice");
-    expect(res.status).toBe(200);
-    expect(res.body).toEqual({ message: "User deleted successfully" });
+    const response = await request(app).delete("/api/users/alice");
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ message: "User deleted successfully" });
     expect(User.findOneAndDelete).toHaveBeenCalledWith({ username: "alice" });
   });
 
   it("returns 404 when user does not exist", async () => {
     User.findOneAndDelete.mockResolvedValue(null);
-    const res = await request(app).delete("/api/users/ghost");
-    expect(res.status).toBe(404);
-    expect(res.body).toEqual({ message: "User not found" });
+    const response = await request(app).delete("/api/users/ghost");
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({ message: "User not found" });
   });
 
   it("handles DB error gracefully", async () => {
     User.findOneAndDelete.mockRejectedValue(new Error("DB crash"));
-    const res = await request(app).delete("/api/users/alice");
-    expect(res.status).toBeGreaterThanOrEqual(500);
+    const response = await request(app).delete("/api/users/alice");
+    expect(response.status).toBeGreaterThanOrEqual(500);
   });
 });
 
@@ -455,25 +455,25 @@ describe("POST /api/auth", () => {
   });
 
   it("returns 200 with success message when credentials are valid", async () => {
-    passport._setAuthHandler((req, _res, next) => {
-      req.user = { id: "u1", username: "alice" };
+    passport._setAuthHandler((request, _response, next) => {
+      request.user = { id: "u1", username: "alice" };
       next();
     });
-    const res = await request(app)
+    const response = await request(app)
       .post("/api/auth")
       .send({ username: "alice", password: "secret" });
-    expect(res.status).toBe(200);
-    expect(res.body).toEqual({ msg: "Logging success" });
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ msg: "Logging success" });
   });
 
   it("returns 401 when credentials are invalid", async () => {
-    passport._setAuthHandler((_req, res) => {
-      res.status(401).json({ message: "Unauthorized" });
+    passport._setAuthHandler((_request, response) => {
+      response.status(401).json({ message: "Unauthorized" });
     });
-    const res = await request(app)
+    const response = await request(app)
       .post("/api/auth")
       .send({ username: "alice", password: "wrong" });
-    expect(res.status).toBe(401);
+    expect(response.status).toBe(401);
   });
 });
 
@@ -485,19 +485,19 @@ describe("GET /api/auth/status", () => {
   });
 
   it("returns 401 when user is not authenticated", async () => {
-    const res = await request(app).get("/api/auth/status");
-    expect(res.status).toBe(401);
-    expect(res.body).toEqual({ msg: "User not authenticated" });
+    const response = await request(app).get("/api/auth/status");
+    expect(response.status).toBe(401);
+    expect(response.body).toEqual({ msg: "User not authenticated" });
   });
 
   it("returns 200 when user is authenticated", async () => {
-    passport._setSessionHandler((req, _res, next) => {
-      req.user = { id: "u1", username: "alice" };
+    passport._setSessionHandler((request, _response, next) => {
+      request.user = { id: "u1", username: "alice" };
       next();
     });
-    const res = await request(app).get("/api/auth/status");
-    expect(res.status).toBe(200);
-    expect(res.body).toEqual({ msg: "User is authenticated" });
+    const response = await request(app).get("/api/auth/status");
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ msg: "User is authenticated" });
   });
 });
 
@@ -509,29 +509,29 @@ describe("POST /api/auth/logout", () => {
   });
 
   it("returns 401 when not authenticated", async () => {
-    const res = await request(app).post("/api/auth/logout");
-    expect(res.status).toBe(401);
-    expect(res.body).toEqual({ msg: "User not authenticated" });
+    const response = await request(app).post("/api/auth/logout");
+    expect(response.status).toBe(401);
+    expect(response.body).toEqual({ msg: "User not authenticated" });
   });
 
   it("returns 200 when logout is successful", async () => {
-    passport._setSessionHandler((req, _res, next) => {
-      req.user = { id: "u1" };
-      req.logout = jest.fn((cb) => cb(null));
+    passport._setSessionHandler((request, _response, next) => {
+      request.user = { id: "u1" };
+      request.logout = jest.fn((cb) => cb(null));
       next();
     });
-    const res = await request(app).post("/api/auth/logout");
-    expect(res.status).toBe(200);
+    const response = await request(app).post("/api/auth/logout");
+    expect(response.status).toBe(200);
   });
 
   it("returns 400 when logout throws an error", async () => {
-    passport._setSessionHandler((req, _res, next) => {
-      req.user = { id: "u1" };
-      req.logout = jest.fn((cb) => cb(new Error("Logout error")));
+    passport._setSessionHandler((request, _response, next) => {
+      request.user = { id: "u1" };
+      request.logout = jest.fn((cb) => cb(new Error("Logout error")));
       next();
     });
-    const res = await request(app).post("/api/auth/logout");
-    expect(res.status).toBe(400);
+    const response = await request(app).post("/api/auth/logout");
+    expect(response.status).toBe(400);
   });
 });
 
