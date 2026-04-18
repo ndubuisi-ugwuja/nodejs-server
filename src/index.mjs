@@ -70,7 +70,7 @@ app.get("/", (request, response) => {
         }
         console.log(sessionData)
     })
-    response.cookie("MyCookies", "base url cookie", {maxAge: 60000 * 60}) // expires in 1 min (unit in milliseconds)
+    response.cookie("MyCookie", "base url cookie", {maxAge: 60000 * 60}) // expires in 1 min (unit in milliseconds)
     response.status(200).send({msg: "Root directory"})
 })
 
