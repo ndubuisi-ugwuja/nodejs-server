@@ -99,6 +99,7 @@ import app from "../src/index.mjs";
 import { User } from "../src/mongoose/schemas/user.mjs";
 import { hashPassword } from "../src/utils/helpers.mjs";
 import passport from "passport";
+import mongoose from "mongoose";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -126,32 +127,22 @@ function mockAuthBehavior(mode, fakeUser = { id: "u1", username: "alice" }) {
 
 // ─── Test suites ──────────────────────────────────────────────────────────────
 
-// NOTE — source code bug in index.mjs:
-//   response.cookie("Test cookies", ...) uses a space in the cookie name.
-//   Express 5 enforces RFC 6265 strictly and throws on invalid names, causing a 500.
-//   Fix in source: rename to "TestCookies" (no spaces).
-//   The tests below document current behaviour; update them after fixing the source.
 describe("GET /", () => {
-  it("returns 500 due to invalid cookie name with space (source bug — rename to 'TestCookies')", async () => {
+  it("returns 200 with Root directory message", async () => {
     const res = await request(app).get("/");
-    // Expected 200 once source is fixed; currently 500 because Express 5 rejects
-    // cookie names containing spaces (RFC 6265).
-    expect(res.status).toBe(500);
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({ msg: "Root directory" });
   });
 
-  it("does NOT set a cookie because the response errors out (source bug)", async () => {
+  it("sets a TestCookies cookie on the response", async () => {
     const res = await request(app).get("/");
-    // Will become defined once cookie name is fixed in source
-    expect(res.headers["set-cookie"]).toBeUndefined();
+    expect(res.headers["set-cookie"]).toBeDefined();
+    expect(res.headers["set-cookie"][0]).toMatch(/TestCookies/);
   });
 });
 
 // ─── GET /api/users ───────────────────────────────────────────────────────────
 
-// NOTE — source code bug in index.mjs GET /api/users:
-//   validationResult(request) is logged but the route never returns 400 on errors.
-//   Fix in source: add  →  if (!result.isEmpty()) return response.status(400).send(...)
-//   Tests marked ⚠ document current (broken) behaviour and should be updated after fix.
 describe("GET /api/users", () => {
   const fakeUsers = [
     { username: "alice", displayName: "Alice" },
@@ -162,15 +153,25 @@ describe("GET /api/users", () => {
     User.find.mockReset();
   });
 
-  it("returns all users when no filter/value query params", async () => {
+  // The filter param is now validated — to reach the "return all users" branch,
+  // pass a valid filter with no value (filter && value = false → falls through to find()).
+  it("returns all users when a valid filter is given but no value", async () => {
     User.find.mockResolvedValue(fakeUsers);
-    const res = await request(app).get("/api/users");
+    const res = await request(app)
+      .get("/api/users")
+      .query({ filter: "username" }); // valid filter, no value → returns all users
     expect(res.status).toBe(200);
     expect(res.body).toEqual(fakeUsers);
     expect(User.find).toHaveBeenCalledWith();
   });
 
-  it("filters users when filter and value are provided", async () => {
+  it("returns 400 when no filter param is provided (validation enforced)", async () => {
+    const res = await request(app).get("/api/users");
+    expect(res.status).toBe(400);
+    expect(res.body).toHaveProperty("error");
+  });
+
+  it("filters users when both filter and value are provided", async () => {
     User.find.mockResolvedValue([fakeUsers[0]]);
     const res = await request(app)
       .get("/api/users")
@@ -181,36 +182,35 @@ describe("GET /api/users", () => {
     });
   });
 
-  // ⚠ Should be 400 — validation errors are detected but not enforced in source
-  it("⚠ returns 200 (not 400) when filter is too short — validation not enforced in source", async () => {
-    User.find.mockResolvedValue([]);
+  it("returns 400 when filter is too short (< 3 chars)", async () => {
     const res = await request(app)
       .get("/api/users")
-      .query({ filter: "ab" }); // < 3 chars — validation fires but is ignored
-    expect(res.status).toBe(200); // change to 400 after adding the isEmpty() guard
+      .query({ filter: "ab" });
+    expect(res.status).toBe(400);
+    expect(res.body.error[0].msg).toBe("Must be 3 - 10 chars");
   });
 
-  // ⚠ Should be 400 — validation errors are detected but not enforced in source
-  it("⚠ returns 200 (not 400) when filter is too long — validation not enforced in source", async () => {
-    User.find.mockResolvedValue([]);
+  it("returns 400 when filter is too long (> 10 chars)", async () => {
     const res = await request(app)
       .get("/api/users")
-      .query({ filter: "averylongstring" }); // > 10 chars
-    expect(res.status).toBe(200); // change to 400 after adding the isEmpty() guard
+      .query({ filter: "averylongstring" });
+    expect(res.status).toBe(400);
+    expect(res.body.error[0].msg).toBe("Must be 3 - 10 chars");
   });
 
-  it("returns 400 when filter is not a string (numeric value)", async () => {
+  it("returns 400 when filter is not provided (fails isString + notEmpty)", async () => {
     const res = await request(app)
       .get("/api/users")
-      .query({ filter: 12345 });
-    // express-validator coerces query params to strings; this tests the empty check
+      .query({ filter: 12345 }); // express-validator coerces to string "12345" — 5 chars, passes length
     expect([200, 400]).toContain(res.status);
   });
 
+  // Pass a valid filter so validation passes and the DB error is actually reached
   it("returns 500-level response on DB error", async () => {
     User.find.mockRejectedValue(new Error("DB failure"));
-    const res = await request(app).get("/api/users");
-    // Express default error handler returns 500
+    const res = await request(app)
+      .get("/api/users")
+      .query({ filter: "username" }); // valid filter, no value → reaches User.find()
     expect(res.status).toBeGreaterThanOrEqual(500);
   });
 });
@@ -560,11 +560,15 @@ describe("hashPassword utility", () => {
 });
 
 // ─── Mongoose connection ──────────────────────────────────────────────────────
-
-import mongoose from "mongoose";
+// mongoose is imported at the top of this file alongside the other imports.
+// connect() is called synchronously when index.mjs is first loaded by Jest,
+// so by the time any test runs the call is already recorded.
 
 describe("Mongoose connection", () => {
-  it("calls mongoose.connect on startup", () => {
+  it("calls mongoose.connect with the correct URI on startup", () => {
+    // toHaveBeenCalledWith checks the full call history since module load —
+    // as long as no test calls jest.clearAllMocks() / jest.resetAllMocks()
+    // globally, this will always find the call made at import time.
     expect(mongoose.connect).toHaveBeenCalledWith(
       "mongodb://localhost/express-backend"
     );
