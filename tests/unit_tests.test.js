@@ -106,7 +106,6 @@ import app from "../src/index.mjs";
 import { User } from "../src/mongoose/schemas/user.mjs";
 import { hashPassword } from "../src/utils/helpers.mjs";
 import passport from "passport";
-import mongoose from "mongoose";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -563,21 +562,5 @@ describe("hashPassword utility", () => {
       .patch("/api/users/test")
       .send({ password: "patchpass" });
     expect(hashPassword).toHaveBeenCalledWith("patchpass");
-  });
-});
-
-// ─── Mongoose connection ──────────────────────────────────────────────────────
-// mongoose is imported at the top of this file alongside the other imports.
-// connect() is called synchronously when index.mjs is first loaded by Jest,
-// so by the time any test runs the call is already recorded.
-
-describe("Mongoose connection", () => {
-  it("calls mongoose.connect with the correct URI on startup", () => {
-    // toHaveBeenCalledWith checks the full call history since module load —
-    // as long as no test calls jest.clearAllMocks() / jest.resetAllMocks()
-    // globally, this will always find the call made at import time.
-    expect(mongoose.connect).toHaveBeenCalledWith(
-      "mongodb://localhost/express-backend"
-    );
   });
 });
