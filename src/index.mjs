@@ -206,6 +206,8 @@ app.post("/api/auth/logout", (request, response) => {
     })
 })
 
+export default app
+
 app.listen(PORT, () => {
     console.log(`Running on port ${PORT}`)
 })
