@@ -63,20 +63,16 @@ jest.mock("../src/utils/validationSchemas.mjs", () => ({
   },
 }));
 
-// Passport — configurable per-test via mockAuthBehavior()
-const mockPassportAuthenticate = jest.fn();
-
-jest.mock("passport", () => {
-  const middleware = (strategy) => mockPassportAuthenticate(strategy);
-  return {
-    initialize: jest.fn(() => (_req, _res, next) => next()),
-    session: jest.fn(() => (_req, _res, next) => next()),
-    authenticate: jest.fn((strategy) => mockPassportAuthenticate(strategy)),
-    serializeUser: jest.fn(),
-    deserializeUser: jest.fn(),
-    use: jest.fn(),
-  };
-});
+// Passport — each method is a plain jest.fn(); behaviour is overridden per-test
+// by importing passport and calling .mockReturnValue() on its methods.
+jest.mock("passport", () => ({
+  initialize: jest.fn(() => (_req, _res, next) => next()),
+  session: jest.fn(() => (_req, _res, next) => next()),
+  authenticate: jest.fn(() => (_req, _res, next) => next()),
+  serializeUser: jest.fn(),
+  deserializeUser: jest.fn(),
+  use: jest.fn(),
+}));
 
 // ─── Imports ──────────────────────────────────────────────────────────────────
 
@@ -84,24 +80,21 @@ import request from "supertest";
 import app from "../src/index.mjs";
 import { User } from "../src/mongoose/schemas/user.mjs";
 import { hashPassword } from "../src/utils/helpers.mjs";
+import passport from "passport";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 /**
  * Configure passport.authenticate to simulate success or failure.
  * @param {"success"|"failure"|"error"} mode
- * @param {object} [fakeUser]   returned to req.user on success
+ * @param {object} [fakeUser]
  */
 function mockAuthBehavior(mode, fakeUser = { id: "u1", username: "alice" }) {
-  const passport = require("passport"); // eslint-disable-line @typescript-eslint/no-var-requires
   passport.authenticate.mockImplementation(() => (req, res, next) => {
     if (mode === "success") {
       req.user = fakeUser;
       req.isAuthenticated = () => true;
-      req.logout = jest.fn((cb) => {
-        req.user = null;
-        cb(null);
-      });
+      req.logout = jest.fn((cb) => { req.user = null; cb(null); });
       next();
     } else if (mode === "failure") {
       res.status(401).json({ message: "Unauthorized" });
@@ -109,13 +102,6 @@ function mockAuthBehavior(mode, fakeUser = { id: "u1", username: "alice" }) {
       next(new Error("Auth error"));
     }
   });
-}
-
-/** Inject an already-authenticated user directly into the request session */
-function withAuthenticatedUser(agent, user = { id: "u1", username: "alice" }) {
-  // Supertest doesn't support persistent session injection easily, so we patch
-  // the middleware directly for tests that need req.user populated.
-  return user;
 }
 
 // ─── Test suites ──────────────────────────────────────────────────────────────
@@ -424,17 +410,16 @@ describe("DELETE /api/users/:username", () => {
 
 describe("POST /api/auth", () => {
   beforeEach(() => {
-    jest.resetAllMocks();
+    passport.authenticate.mockReset();
+    // Default: passthrough (next())
+    passport.authenticate.mockReturnValue((_req, _res, next) => next());
   });
 
   it("returns 200 with success message when credentials are valid", async () => {
-    const passport = await import("passport");
-    passport.default.authenticate.mockReturnValue(
-      (req, res, next) => {
-        req.user = { id: "u1", username: "alice" };
-        next();
-      }
-    );
+    passport.authenticate.mockReturnValue((req, _res, next) => {
+      req.user = { id: "u1", username: "alice" };
+      next();
+    });
     const res = await request(app)
       .post("/api/auth")
       .send({ username: "alice", password: "secret" });
@@ -443,12 +428,9 @@ describe("POST /api/auth", () => {
   });
 
   it("returns 401 when credentials are invalid", async () => {
-    const passport = await import("passport");
-    passport.default.authenticate.mockReturnValue(
-      (_req, res) => {
-        res.status(401).json({ message: "Unauthorized" });
-      }
-    );
+    passport.authenticate.mockReturnValue((_req, res) => {
+      res.status(401).json({ message: "Unauthorized" });
+    });
     const res = await request(app)
       .post("/api/auth")
       .send({ username: "alice", password: "wrong" });
@@ -459,6 +441,10 @@ describe("POST /api/auth", () => {
 // ─── GET /api/auth/status ─────────────────────────────────────────────────────
 
 describe("GET /api/auth/status", () => {
+  beforeEach(() => {
+    passport.session.mockReturnValue((_req, _res, next) => next());
+  });
+
   it("returns 401 when user is not authenticated", async () => {
     const res = await request(app).get("/api/auth/status");
     expect(res.status).toBe(401);
@@ -466,19 +452,11 @@ describe("GET /api/auth/status", () => {
   });
 
   it("returns 200 when user is authenticated", async () => {
-    // Inject req.user via a custom middleware on the supertest agent.
-    // Because we can't easily set req.user without a real session, we test
-    // the happy path by monkey-patching passport.session in this scope.
-    const passport = await import("passport");
-    passport.default.session.mockReturnValue((req, _res, next) => {
+    passport.session.mockReturnValue((req, _res, next) => {
       req.user = { id: "u1", username: "alice" };
       next();
     });
-
-    // Re-import app to pick up the new mock (or test indirectly)
-    // This confirms the branch logic; actual integration needs a session cookie.
     const res = await request(app).get("/api/auth/status");
-    // With the session mock injecting req.user the route should 200
     expect([200, 401]).toContain(res.status);
   });
 });
@@ -486,6 +464,10 @@ describe("GET /api/auth/status", () => {
 // ─── POST /api/auth/logout ────────────────────────────────────────────────────
 
 describe("POST /api/auth/logout", () => {
+  beforeEach(() => {
+    passport.session.mockReturnValue((_req, _res, next) => next());
+  });
+
   it("returns 401 when not authenticated", async () => {
     const res = await request(app).post("/api/auth/logout");
     expect(res.status).toBe(401);
@@ -493,20 +475,17 @@ describe("POST /api/auth/logout", () => {
   });
 
   it("returns 200 when logout is successful", async () => {
-    const passport = await import("passport");
-    passport.default.session.mockReturnValue((req, _res, next) => {
+    passport.session.mockReturnValue((req, _res, next) => {
       req.user = { id: "u1" };
       req.logout = jest.fn((cb) => cb(null));
       next();
     });
     const res = await request(app).post("/api/auth/logout");
-    // Route depends on req.user being populated by session middleware
     expect([200, 401]).toContain(res.status);
   });
 
   it("returns 400 when logout throws an error", async () => {
-    const passport = await import("passport");
-    passport.default.session.mockReturnValue((req, _res, next) => {
+    passport.session.mockReturnValue((req, _res, next) => {
       req.user = { id: "u1" };
       req.logout = jest.fn((cb) => cb(new Error("Logout error")));
       next();
@@ -548,10 +527,11 @@ describe("hashPassword utility", () => {
 
 // ─── Mongoose connection ──────────────────────────────────────────────────────
 
+import mongoose from "mongoose";
+
 describe("Mongoose connection", () => {
-  it("calls mongoose.connect on startup", async () => {
-    const mongoose = await import("mongoose");
-    expect(mongoose.default.connect).toHaveBeenCalledWith(
+  it("calls mongoose.connect on startup", () => {
+    expect(mongoose.connect).toHaveBeenCalledWith(
       "mongodb://localhost/express-backend"
     );
   });
