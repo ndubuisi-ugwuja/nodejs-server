@@ -77,7 +77,8 @@ app.get("/", (request, response) => {
 // Query parameter
 app.get("/api/users", query("filter").isString().withMessage("Must be a string").notEmpty().withMessage("Must not be empty").isLength({min: 3, max:10}).withMessage("Must be 3 - 10 chars"), async (request, response) => {
     const result = validationResult(request)
-    console.log(result)
+
+    if (!result.isEmpty()) return response.status(400).send({ error: result.array() })
 
     const { query: { filter, value } } = request
 
