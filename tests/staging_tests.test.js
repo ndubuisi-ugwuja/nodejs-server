@@ -28,6 +28,15 @@ import request from "supertest";
 import mongoose from "mongoose";
 import app from "../src/index.mjs";
 
+// Suppress expected console.error noise from duplicate key errors
+beforeAll(() => {
+  jest.spyOn(console, "error").mockImplementation(() => {});
+});
+
+afterAll(() => {
+  console.error.mockRestore();
+});
+
 // ─── Config ───────────────────────────────────────────────────────────────────
 
 const MONGO_URI =
