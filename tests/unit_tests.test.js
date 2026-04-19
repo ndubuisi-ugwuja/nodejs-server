@@ -144,14 +144,14 @@ describe("GET /", () => {
         expect(response.body).toEqual({ msg: "Root directory" });
     });
 
-    it("sets a TestCookies cookie on the response", async () => {
+    it("sets a MyCookie cookie on the response", async () => {
         const response = await request(app).get("/");
         expect(response.headers["set-cookie"]).toBeDefined();
-        expect(response.headers["set-cookie"][0]).toMatch(/TestCookies/);
+        expect(response.headers["set-cookie"][0]).toMatch(/MyCookie/);
     });
 });
 
-// ─── GET /api/users ───────────────────────────────────────────────────────────
+// GET /api/users
 
 describe("GET /api/users", () => {
     const fakeUsers = [
