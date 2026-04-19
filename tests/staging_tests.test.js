@@ -359,7 +359,7 @@ describe("DELETE /api/users/:username", () => {
   });
 });
 
-// ─── Google OAuth endpoints ───────────────────────────────────────────────────
+// Google OAuth endpoints
 //
 // Full Google OAuth cannot be tested in a staging environment without
 // real Google credentials and a live redirect URI. What we CAN verify is
@@ -381,7 +381,7 @@ describe("GET /api/google/auth/redirect", () => {
   });
 });
 
-// ─── Data integrity ───────────────────────────────────────────────────────────
+// Data integrity
 
 describe("Data integrity", () => {
   it("passwords are never stored or returned in plain text", async () => {
