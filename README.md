@@ -46,5 +46,3 @@ HTTP is stateless — every request is a blank slate. The server has no memory o
 Sessions represent the duration of a user in a website
 
 npx prettier --check tests/unit_tests.test.js
-
-npx jest staging_tests --runInBand --forceExit --testTimeout=15000
