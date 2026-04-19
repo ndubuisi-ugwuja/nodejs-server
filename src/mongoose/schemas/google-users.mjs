@@ -9,11 +9,11 @@ const googleUserSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    
+
     email: {
         type: String,
         required: true,
-    }
+    },
 });
 
-export const googleUser = mongoose.model('googleUser', googleUserSchema);
+export const googleUser = mongoose.model("googleUser", googleUserSchema);
