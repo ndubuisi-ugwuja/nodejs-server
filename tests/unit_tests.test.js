@@ -448,7 +448,7 @@ describe("POST /api/auth", () => {
     });
 });
 
-// ─── GET /api/auth/status ─────────────────────────────────────────────────────
+// GET /api/auth/status
 
 describe("GET /api/auth/status", () => {
     afterEach(() => {
