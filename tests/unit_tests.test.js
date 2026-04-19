@@ -506,7 +506,7 @@ describe("POST /api/auth/logout", () => {
     });
 });
 
-// ─── hashPassword helper ──────────────────────────────────────────────────────
+// hashPassword helper
 
 describe("hashPassword utility", () => {
     it("is called with the raw password on POST /api/users", async () => {
