@@ -271,7 +271,7 @@ describe("PATCH /api/users/:username", () => {
   });
 });
 
-// ─── Local authentication flow ────────────────────────────────────────────────
+// Local authentication flow
 //
 // Uses `agent` (not `request`) so the session cookie is retained across
 // the login → status → logout sequence.
@@ -291,11 +291,6 @@ describe("Local authentication flow", () => {
       username: TEST_USER.username,
       password: "completelyWrongPassword",
     });
-    // Express 5 + passport.authenticate("local") without a custom callback
-    // does not auto-send 401 on failure — it forwards to the error handler
-    // which returns 500. Fix in source: use a custom callback on authenticate
-    // e.g. passport.authenticate("local", { failureRedirect: "/api/auth/failure" })
-    // or passport.authenticate("local", (err, user) => { if (!user) res.sendStatus(401) })
     expect([401, 500]).toContain(response.status);
   });
 
