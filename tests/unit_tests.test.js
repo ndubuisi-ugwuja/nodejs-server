@@ -135,7 +135,7 @@ function mockAuthBehavior(mode, fakeUser = { id: "u1", username: "alice" }) {
     });
 }
 
-// ─── Test suites ──────────────────────────────────────────────────────────────
+// Test suite
 
 describe("GET /", () => {
     it("returns 200 with Root directory message", async () => {
