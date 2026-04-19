@@ -350,7 +350,7 @@ describe("PUT /api/users/:username", () => {
     });
 });
 
-// ─── PATCH /api/users/:username ───────────────────────────────────────────────
+// PATCH /api/users/:username
 
 describe("PATCH /api/users/:username", () => {
     beforeEach(() => {
