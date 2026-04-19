@@ -133,7 +133,7 @@ describe("POST /api/users", () => {
   });
 });
 
-// ─── GET /api/users — list & filter ──────────────────────────────────────────
+// GET /api/users — list & filter
 
 describe("GET /api/users", () => {
   it("returns 400 when no filter param is provided", async () => {
