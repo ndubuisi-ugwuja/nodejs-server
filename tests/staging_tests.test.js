@@ -80,7 +80,7 @@ describe("GET /", () => {
   });
 });
 
-// ─── POST /api/users — user registration ──────────────────────────────────────
+// POST /api/users — user registration
 
 describe("POST /api/users", () => {
   it("creates a new user and returns 201 with the saved document", async () => {
