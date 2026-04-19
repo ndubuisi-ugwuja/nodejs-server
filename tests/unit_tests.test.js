@@ -422,7 +422,7 @@ describe("DELETE /api/users/:username", () => {
     });
 });
 
-// ─── POST /api/auth (local authentication) ───────────────────────────────────
+// POST /api/auth (local authentication)
 
 describe("POST /api/auth", () => {
     afterEach(() => {
