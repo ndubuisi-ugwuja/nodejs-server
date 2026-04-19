@@ -243,7 +243,7 @@ describe("GET /api/users/:username", () => {
     });
 });
 
-// ─── POST /api/users ──────────────────────────────────────────────────────────
+// POST /api/users
 
 describe("POST /api/users", () => {
     const validPayload = { username: "alice", password: "secret123" };
