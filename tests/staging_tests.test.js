@@ -331,7 +331,7 @@ describe("Local authentication flow", () => {
   });
 });
 
-// ─── DELETE /api/users/:username ──────────────────────────────────────────────
+// DELETE /api/users/:username
 //
 // Placed last so staging_bob is available throughout all earlier suites.
 
