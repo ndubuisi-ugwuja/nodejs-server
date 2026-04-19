@@ -213,7 +213,7 @@ describe("GET /api/users", () => {
     });
 });
 
-// ─── GET /api/users/:username ─────────────────────────────────────────────────
+// GET /api/users/:username
 
 describe("GET /api/users/:username", () => {
     beforeEach(() => {
