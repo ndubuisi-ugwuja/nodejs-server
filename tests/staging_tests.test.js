@@ -1,29 +1,3 @@
-/**
- * staging_tests.test.js — Integration tests for index.mjs
- *
- * Unlike unit tests, staging tests run against a REAL MongoDB instance with
- * NO mocks. Every request exercises the full stack: Express → Passport →
- * Mongoose → MongoDB.
- *
- * Prerequisites:
- *  1. MongoDB running locally:  mongod --dbpath /tmp/db
- *     Or via Docker:            docker run -p 27017:27017 mongo
- *  2. A .env.test file (or set env vars inline):
- *       MONGO_URI=mongodb://localhost/express-backend-staging
- *       SESSION_SECRET=staging-secret
- *  3. npm install --save-dev supertest
- *
- * Run in isolation (never mix with unit tests in the same jest run):
- *   npx jest staging_tests --runInBand --forceExit
- *
- * --runInBand is important: tests share session cookies and DB state so they
- * must run serially in the order written, not in parallel.
- *
- * WARNING: This suite writes real data to the staging database. The
- * afterAll block cleans up every document it created, but if the suite
- * crashes mid-run you may need to manually drop the test collections.
- */
-
 import request from "supertest";
 import mongoose from "mongoose";
 import app from "../src/index.mjs";
