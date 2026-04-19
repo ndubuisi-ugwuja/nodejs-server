@@ -472,7 +472,7 @@ describe("GET /api/auth/status", () => {
     });
 });
 
-// ─── POST /api/auth/logout ────────────────────────────────────────────────────
+// POST /api/auth/logout
 
 describe("POST /api/auth/logout", () => {
     afterEach(() => {
