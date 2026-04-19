@@ -393,7 +393,7 @@ describe("PATCH /api/users/:username", () => {
     });
 });
 
-// ─── DELETE /api/users/:username ──────────────────────────────────────────────
+// DELETE /api/users/:username
 
 describe("DELETE /api/users/:username", () => {
     beforeEach(() => {
