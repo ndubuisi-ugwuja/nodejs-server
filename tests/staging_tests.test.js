@@ -27,7 +27,7 @@ const SECOND_USER = {
   password: "StagingPass456!",
 };
 
-// ─── Setup / Teardown ─────────────────────────────────────────────────────────
+// Setup / Teardown
 
 /**
  * supertest agent — persists cookies across requests so session-based
