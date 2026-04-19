@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "main": "index.mjs",
     "scripts": {
-        "test": "jest",
+        "test": "jest --runInBand --forceExit --testTimeout=15000",
         "start": "node ./src/index.mjs",
         "start:dev": "nodemon ./src/index.mjs",
         "format": "prettier --write ."
