@@ -1,4 +1,4 @@
-// ─── Module mocks (must be declared before any imports) ───────────────────────
+// Module mocks (must be declared before any imports)
 
 jest.mock("../src/strategies/local-strategy.mjs", () => ({}));
 jest.mock("../src/strategies/google-strategy.mjs", () => ({}));
@@ -93,8 +93,7 @@ jest.mock("passport", () => {
   };
 });
 
-// ─── Imports ──────────────────────────────────────────────────────────────────
-
+// Imports
 import request from "supertest";
 import app from "../src/index.mjs";
 import { User } from "../src/mongoose/schemas/user.mjs";
