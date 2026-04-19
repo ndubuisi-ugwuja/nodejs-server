@@ -215,7 +215,7 @@ describe("GET /api/users/:username", () => {
   });
 });
 
-// ─── PUT /api/users/:username — full replacement ──────────────────────────────
+// PUT /api/users/:username — full replacement
 
 describe("PUT /api/users/:username", () => {
   const updatedPayload = {
