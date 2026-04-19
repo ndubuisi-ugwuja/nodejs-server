@@ -3,12 +3,6 @@
 jest.mock("../src/strategies/local-strategy.mjs", () => ({}));
 jest.mock("../src/strategies/google-strategy.mjs", () => ({}));
 jest.mock("dotenv/config", () => ({}));
-
-// Mongoose — without __esModule: true, Babel's _interopRequireDefault wraps the
-// mock object differently in each file, producing two separate `connect`
-// references. Adding __esModule: true tells Babel "this already has a proper
-// default export — don't wrap it", so both index.mjs and the test file resolve
-// to the exact same object and share the same mock call history.
 jest.mock("mongoose", () => ({
   __esModule: true,
   default: {
