@@ -44,3 +44,7 @@ Cookies are small piece of data a server sends to the client on HTTP request. Th
 HTTP is stateless — every request is a blank slate. The server has no memory of who you are between requests. Cookies give the server a way to "tag" your browser so it can recognize you on the next visit.
 
 Sessions represent the duration of a user in a website
+
+npx prettier --check tests/unit_tests.test.js
+
+npx jest staging_tests --runInBand --forceExit --testTimeout=15000
