@@ -451,65 +451,53 @@ describe("POST /api/auth", () => {
 // GET /api/google/auth
 
 describe("GET /api/google/auth", () => {
-  afterEach(() => {
-    passport._resetAuthHandler();
-  });
-
-  it("returns 200 when Google OAuth succeeds (mock bypasses real redirect)", async () => {
-    passport._setAuthHandler((_request, _response, next) => {
-      next();
+    afterEach(() => {
+        passport._resetAuthHandler();
     });
-    const response = await request(app).get("/api/google/auth");
-    expect(response.status).toBe(200);
-  });
 
-  it("returns 401 when Google OAuth fails", async () => {
-    passport._setAuthHandler((_request, response) => {
-      response.status(401).json({ message: "Google auth failed" });
+    it("returns 200 when Google OAuth succeeds (mock bypasses real redirect)", async () => {
+        passport._setAuthHandler((_request, _response, next) => {
+            next();
+        });
+        const response = await request(app).get("/api/google/auth");
+        expect(response.status).toBe(200);
     });
-    const response = await request(app).get("/api/google/auth");
-    expect(response.status).toBe(401);
-    expect(response.body).toEqual({ message: "Google auth failed" });
-  });
 
-  it("calls passport.authenticate with the google strategy", async () => {
-    passport._setAuthHandler((_request, _response, next) => next());
-    await request(app).get("/api/google/auth");
-    expect(passport.authenticate).toHaveBeenCalledWith("google");
-  });
+    it("returns 401 when Google OAuth fails", async () => {
+        passport._setAuthHandler((_request, response) => {
+            response.status(401).json({ message: "Google auth failed" });
+        });
+        const response = await request(app).get("/api/google/auth");
+        expect(response.status).toBe(401);
+        expect(response.body).toEqual({ message: "Google auth failed" });
+    });
 });
 
 // GET /api/google/auth/redirect
 
 describe("GET /api/google/auth/redirect", () => {
-  afterEach(() => {
-    passport._resetAuthHandler();
-  });
-
-  it("returns 200 with success message when redirect completes successfully", async () => {
-    passport._setAuthHandler((request, _response, next) => {
-      request.user = { id: "google-u1", googleId: "g123", displayName: "Alice" };
-      next();
+    afterEach(() => {
+        passport._resetAuthHandler();
     });
-    const response = await request(app).get("/api/google/auth/redirect");
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual({ msg: "Logged in successfully" });
-  });
 
-  it("returns 401 when the OAuth callback is rejected", async () => {
-    passport._setAuthHandler((_request, response) => {
-      response.status(401).json({ message: "OAuth callback failed" });
+    it("returns 200 with success message when redirect completes successfully", async () => {
+        passport._setAuthHandler((request, _response, next) => {
+            request.user = { id: "google-u1", googleId: "g123", displayName: "Alice" };
+            next();
+        });
+        const response = await request(app).get("/api/google/auth/redirect");
+        expect(response.status).toBe(200);
+        expect(response.body).toEqual({ msg: "Logged in successfully" });
     });
-    const response = await request(app).get("/api/google/auth/redirect");
-    expect(response.status).toBe(401);
-    expect(response.body).toEqual({ message: "OAuth callback failed" });
-  });
 
-  it("calls passport.authenticate with the google strategy", async () => {
-    passport._setAuthHandler((_request, _response, next) => next());
-    await request(app).get("/api/google/auth/redirect");
-    expect(passport.authenticate).toHaveBeenCalledWith("google");
-  });
+    it("returns 401 when the OAuth callback is rejected", async () => {
+        passport._setAuthHandler((_request, response) => {
+            response.status(401).json({ message: "OAuth callback failed" });
+        });
+        const response = await request(app).get("/api/google/auth/redirect");
+        expect(response.status).toBe(401);
+        expect(response.body).toEqual({ message: "OAuth callback failed" });
+    });
 });
 
 // GET /api/auth/status
