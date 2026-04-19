@@ -100,7 +100,7 @@ import { User } from "../src/mongoose/schemas/user.mjs";
 import { hashPassword } from "../src/utils/helpers.mjs";
 import passport from "passport";
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// Helpers
 
 /**
  * Configure passport.authenticate behaviour for a test.
