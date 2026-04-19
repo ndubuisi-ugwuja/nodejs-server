@@ -300,7 +300,7 @@ describe("POST /api/users", () => {
     });
 });
 
-// ─── PUT /api/users/:username ─────────────────────────────────────────────────
+// PUT /api/users/:username
 
 describe("PUT /api/users/:username", () => {
     const validPayload = { username: "alice", password: "newpass" };
