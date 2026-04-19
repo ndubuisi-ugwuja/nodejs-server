@@ -56,7 +56,7 @@ afterAll(async () => {
   await mongoose.connection.close();
 }, 15000);
 
-// ─── Health check ─────────────────────────────────────────────────────────────
+// Health check
 
 describe("GET /", () => {
   it("returns 200 with the root directory message", async () => {
