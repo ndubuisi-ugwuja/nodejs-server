@@ -196,7 +196,7 @@ describe("GET /api/users", () => {
   });
 });
 
-// ─── GET /api/users/:username ─────────────────────────────────────────────────
+// GET /api/users/:username
 
 describe("GET /api/users/:username", () => {
   it("returns the user document when found", async () => {
