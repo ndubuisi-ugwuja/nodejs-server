@@ -11,7 +11,7 @@ afterAll(() => {
   console.error.mockRestore();
 });
 
-// ─── Config ───────────────────────────────────────────────────────────────────
+// Config
 
 const MONGO_URI =
   process.env.MONGO_URI || "mongodb://localhost/express-backend-staging";
