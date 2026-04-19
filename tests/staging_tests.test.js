@@ -250,7 +250,7 @@ describe("PUT /api/users/:username", () => {
   });
 });
 
-// ─── PATCH /api/users/:username — partial update ─────────────────────────────
+// PATCH /api/users/:username — partial update
 
 describe("PATCH /api/users/:username", () => {
   it("partially updates the user and returns 200", async () => {
