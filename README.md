@@ -373,7 +373,7 @@ Fully isolated — no real database, no real bcrypt, no network calls. Every ext
 **Run:**
 
 ```bash
-npm test
+npm test unit_tests.test.js
 ```
 
 **Coverage:** 43 tests across all routes and middleware behaviors.
@@ -400,7 +400,7 @@ Full integration tests against a **real MongoDB instance**. No mocks. Tests the 
 **Run:**
 
 ```bash
-npx jest staging_tests --runInBand --forceExit --testTimeout=15000
+npm test staging_tests.test.js
 ```
 
 > `--runInBand` is **required** — tests share a session agent and database state so they must run serially in order.
