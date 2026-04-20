@@ -1,7 +1,6 @@
 # nodejs-server
 
-A RESTful Express.js backend with local and Google OAuth authentication, MongoDB persistence via Mongoose, session management, and a full test suite (unit + staging).
-
+RESTful Express.js backend
 ---
 
 ## Table of Contents
