@@ -128,13 +128,6 @@ GOOGLE_CALLBACK_URL=http://localhost:3000/api/google/auth/redirect
 
 > **Note:** Never commit `.env` to version control. Add it to `.gitignore`.
 
-For staging tests, create a separate `.env.test`:
-
-```env
-MONGO_URI=mongodb://localhost/express-backend-staging
-SESSION_SECRET=staging-secret
-```
-
 ---
 
 ## Running the Server
