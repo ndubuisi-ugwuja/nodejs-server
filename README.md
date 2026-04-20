@@ -403,8 +403,6 @@ Full integration tests against a **real MongoDB instance**. No mocks. Tests the 
 npm test staging_tests.test.js
 ```
 
-> `--runInBand` is **required** — tests share a session agent and database state so they must run serially in order.
-
 **Coverage:** 38 tests across:
 
 - Health check and cookie verification
