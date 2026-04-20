@@ -14,11 +14,13 @@ import "dotenv/config";
 
 const app = express();
 
+const { SESSION_SECRET, MONGO_URI } = process.env
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(
     session({
-        secret: "dxx13q",
+        secret: SESSION_SECRET,
         saveUninitialized: false,
         resave: false,
         cookie: {
@@ -32,8 +34,6 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-
-const { MONGO_URI } = process.env
 
 mongoose
     .connect(`${MONGO_URI}`)
