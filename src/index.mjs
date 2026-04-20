@@ -14,7 +14,7 @@ import "dotenv/config";
 
 const app = express();
 
-const { SESSION_SECRET, MONGO_URI } = process.env
+const { SESSION_SECRET, MONGO_URI, PORT } = process.env
 
 app.use(express.json());
 app.use(cookieParser());
@@ -39,8 +39,6 @@ mongoose
     .connect(`${MONGO_URI}`)
     .then(() => console.log("Connected to Database"))
     .catch((err) => console.log("Error:", err));
-
-const { PORT } = process.env || 3000;
 
 // Unified serializer
 passport.serializeUser((user, done) => {
