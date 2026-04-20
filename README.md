@@ -1,6 +1,6 @@
 # nodejs-server
 
-RESTful Express.js backend
+RESTful Node.js backend
 ---
 
 ## Table of Contents
