@@ -33,8 +33,10 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+const { MONGO_URI } = process.env
+
 mongoose
-    .connect("mongodb://localhost/express-backend")
+    .connect(`${MONGO_URI}`)
     .then(() => console.log("Connected to Database"))
     .catch((err) => console.log("Error:", err));
 
