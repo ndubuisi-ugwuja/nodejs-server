@@ -27,7 +27,7 @@ app.use(
             maxAge: 60000 * 60, // 1 hour
         },
         store: MongoStore.create({
-            mongoUrl: "mongodb://localhost/express-backend",
+            mongoUrl: MONGO_URI,
         }),
     }),
 );
