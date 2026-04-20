@@ -376,7 +376,7 @@ Fully isolated — no real database, no real bcrypt, no network calls. Every ext
 npm test
 ```
 
-**Coverage:** 39 tests across all routes and middleware behaviors.
+**Coverage:** 43 tests across all routes and middleware behaviors.
 
 **Key mocking patterns used:**
 
