@@ -13,7 +13,7 @@ afterAll(() => {
 
 // Config
 
-const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost/express-backend-staging";
+const { MONGO_URI } = process.env;
 
 // Credentials used throughout — kept in one place so they're easy to change
 const TEST_USER = {
