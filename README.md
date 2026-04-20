@@ -473,6 +473,5 @@ const findUser = type === "google"
 |---|---|---|
 | `npm start` | `node ./src/index.mjs` | Start production server |
 | `npm run start:dev` | `nodemon ./src/index.mjs` | Start dev server with hot reload |
-| `npm test` | `jest` | Run unit tests |
+| `npm test` | `jest` | Run unit and staging tests |
 | `npm run format` | `prettier --write .` | Format all files with Prettier |
-| Staging tests | `npx jest staging_tests --runInBand --forceExit` | Run staging integration tests |
