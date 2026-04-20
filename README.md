@@ -33,7 +33,7 @@ RESTful Node.js backend
 - Session persistence backed by MongoDB via `connect-mongo`
 - Input validation on all write endpoints using `express-validator`
 - Case-insensitive, regex-based user filtering
-- Comprehensive unit test suite (39 tests, zero DB dependencies)
+- Comprehensive unit test suite (43 tests, zero DB dependencies)
 - Comprehensive staging test suite (38 tests, real MongoDB)
 
 ---
